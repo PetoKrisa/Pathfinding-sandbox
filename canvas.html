@@ -20,6 +20,10 @@
                 <input type="number" name="node-x" id="inputNodeX" placeholder="x" min="0" max="2000">
                 <input type="number" name="node-y" id="inputNodeY" placeholder="y" in="0" max="2000">
                 <hr>
+                <input type="button" value="Del" id="btnDeleteNode" disabled>
+                <input type="number" name="node-x2" id="inputNodeX2" placeholder="x" min="0" max="2000" disabled tabindex="1">
+                <input type="number" name="node-y2" id="inputNodeY2" placeholder="y" in="0" max="2000" disabled tabindex="1"> 
+                <hr>
                 <div id="nodeList">
 
                 </div>
@@ -32,9 +36,9 @@
                 <div id="pathList">
             </div>
         </div>
-        
+        <script type="module" src="./Main.js"></script>
     </div>
-    <script type="module" src="./Main.js"></script>
+    
 
 </body>
 </html>

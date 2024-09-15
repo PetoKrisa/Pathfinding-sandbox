@@ -22,10 +22,12 @@ export class Node{
         } else{
             this.main.canvas.fillStyle = "yellow"
         }
-
+        this.main.canvas.font = "50px Arial"
         this.main.canvas.beginPath()
         this.main.canvas.arc(this.x, this.y, 40, 0, 2 * Math.PI)
         this.main.canvas.fill()
+        this.main.canvas.fillStyle = "black"
+        this.main.canvas.fillText(this.id, this.x-14, this.y+14)
         this.isHighlighted = false
     }
 }

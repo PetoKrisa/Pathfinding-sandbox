@@ -1,9 +1,12 @@
 import { Path } from "./path.js"
 import { Node } from "./node.js"
-class Main{
+import { SaveLoad } from "./SaveLoad.js";
+export class Main{
     canvas;
+    saveLoad;
     constructor(canvasId){
         this.canvas = document.getElementById(canvasId).getContext("2d")
+        this.saveLoad = new SaveLoad(this)
     }
     
     nodesList = []
@@ -13,6 +16,8 @@ class Main{
 
     highlightedNode;
     highlightedPath;
+
+    draggedNode = null;
 
     update(){
         for(let i = 0; i < this.pathsList.length; i++){
@@ -33,6 +38,27 @@ class Main{
             this.nodesList[i].draw()
         }
         
+    }
+
+    getDistanceFromNode(x,y,node){
+        return Math.sqrt((Math.pow((x-node.x),2)+Math.pow((y-node.y),2)))
+    }
+
+    findClosestNode(x,y){
+        let lowestDistanceNode = this.nodesList[0]
+        let lowestDistance = null
+        for(let i = 0; i < this.nodesList.length; i++){
+            let currentNode = this.nodesList[i]
+            let distance = this.getDistanceFromNode(x,y,this.nodesList[i])
+            if(lowestDistance==null){
+                lowestDistanceNode = this.nodesList[i]
+                lowestDistance = distance
+            } else if(lowestDistance>distance){
+                lowestDistanceNode = this.nodesList[i]
+                lowestDistance = distance
+            }
+        }
+        return lowestDistanceNode
     }
 
     addNode(x,y){
@@ -64,6 +90,40 @@ class Main{
         }
     }
 
+    updateNode(id, x, y){
+        try{
+            for(let i = 0; i < this.nodesList.length; i++){
+                if(this.nodesList[i].id == id){
+                    this.nodesList[i].x = x;
+                    this.nodesList[i].y = y;
+                    break
+                }
+            }
+            this.update()
+        }
+        catch(err){
+            alert(err)
+        }
+    }
+
+    deleteNode(id){
+        try{
+            for(let i = 0; i < this.nodesList.length; i++){
+                if(this.nodesList[i].id == id){
+                    this.nodesList.splice(i,1)
+                    break
+                }
+            }
+            if(this.nodesList.length==0){
+                this.highlightedNode = null;
+            }
+            this.update()
+        }
+        catch(err){
+            alert(err)
+        }
+    }
+
     addPath(node1Id, node2Id){
         try{
         let node1 = this.getNode(node1Id)
@@ -81,6 +141,7 @@ class Main{
         }
     }
 
+
     getPath(id){
         try{
         let path
@@ -97,29 +158,28 @@ class Main{
         }
     }
 
-    generateNodeList(){
+    generateNodeList(elementId){
         let nodeListHtml = ""
         for(let i = 0; i<this.nodesList.length; i++){
             let node = this.nodesList[i]
             nodeListHtml+= `<p data-id="${node.id}" class="list-item node-list-item" onclick="this.focus()" tabindex="1">${node.id} (${node.x};${node.y})</p>`
         }
-        return nodeListHtml
+        document.getElementById(elementId).innerHTML = nodeListHtml
     }
 
-    generatePathList(){
+    generatePathList(elementId){
         let pathListHtml = ""
         for(let i = 0; i<this.pathsList.length; i++){
             let path = this.pathsList[i]
             pathListHtml+= `<p data-id="${path.id}" class="list-item path-list-item" onclick="this.focus()" tabindex="1">${path.id} (${path.node1.id}-${path.node2.id})</p>`
         }
-        return pathListHtml
+        document.getElementById(elementId).innerHTML = pathListHtml
     }
 
     highlightNode(id){
         for(let i = 0; i < this.nodesList.length; i++){
             if(this.nodesList[i].id == id){
                 this.nodesList[i].isHighlighted = true
-                this.update()
                 break
             }
         }
@@ -129,7 +189,6 @@ class Main{
         for(let i = 0; i < this.pathsList.length; i++){
             if(this.pathsList[i].id == id){
                 this.pathsList[i].isHighlighted = true
-                this.update()
                 break
             }
         }
@@ -142,48 +201,148 @@ class Main{
 
 
 const main = new Main("canvas")
-//controls
 
+//controls and event listeners to make the buttons do something
+
+//highlighting and CRUD operations
+
+
+//highlight nodes, and node list items
 document.addEventListener("focusin", function(e){
     const target = e.target.closest(".node-list-item");
     if(target){
         main.highlightNode(target.dataset.id)
+        main.update()
+
         main.highlightedNode = main.getNode(target.dataset.id)
 
+        target.classList.add("focus")
+        btnDeleteNode.disabled = false;
+        inputNodeX2.disabled = false;
+        inputNodeY2.disabled = false;
+        inputNodeX2.value = main.highlightedNode.x;
+        inputNodeY2.value = main.highlightedNode.y;
+        
+
     }
-  });
+    });
 document.addEventListener("focusout", function(e){
     const target = e.target.closest(".node-list-item");
     if(target){
         main.update()
-        main.highlightedNode = null;
+        //main.highlightedNode = null;
+        target.classList.remove("focus")
     }
-  });
+    });
 
-  document.addEventListener("focusin", function(e){
+btnDeleteNode.onclick = (e)=>{
+    main.deleteNode(main.highlightedNode.id)
+    main.generateNodeList("nodeList")
+}
+
+inputNodeX2.oninput = (e)=>{
+    main.updateNode(main.highlightedNode.id, inputNodeX2.value, inputNodeY2.value)
+    main.generateNodeList("nodeList")
+
+}
+inputNodeY2.oninput = (e)=>{
+    main.updateNode(main.highlightedNode.id, inputNodeX2.value, inputNodeY2.value)
+    main.generateNodeList("nodeList")
+
+}
+
+
+
+//highlight paths, and path list items
+document.addEventListener("focusin", function(e){
     const target = e.target.closest(".path-list-item");
     if(target){
         main.highlightPath(target.dataset.id)
+        this.update()
+
         main.highlightedPath = main.getPath(target.dataset.id)
 
     }
-  });
+    });
 document.addEventListener("focusout", function(e){
     const target = e.target.closest(".path-list-item");
     if(target){
         main.update()
         main.highlightedPath = null;
     }
-  });
+    });
 
-
+//crud operations on paths and nodes
 btnAddNode.addEventListener('click', ()=>{
     main.addNode(inputNodeX.value, inputNodeY.value)
-    document.getElementById("nodeList").innerHTML = main.generateNodeList()
+    main.generateNodeList("nodeList")
 
 })
 btnAddPath.addEventListener('click', ()=>{
     main.addPath(inputPathNode1.value, inputPathNode2.value)
-    document.getElementById("pathList").innerHTML = main.generatePathList()
+    main.generatePathList("pathList")
 
 })
+
+//canvas drag/drop operations
+function getMousePosition(canvas, event) {
+    let rect = canvas.getBoundingClientRect();
+    let scaleX = canvas.width / rect.width 
+    let scaleY = canvas.height / rect.height;
+    let x = (event.clientX - rect.left)*scaleX;
+    let y = (event.clientY - rect.top)*scaleY;
+    return [Math.round(x), Math.round(y)]
+}
+var canvas = document.getElementById("canvas")
+canvas.onmousedown = (e)=>{
+    let mousecoords = getMousePosition(canvas,e)
+    let closest = main.findClosestNode(mousecoords[0], mousecoords[1])
+    if(main.getDistanceFromNode(mousecoords[0],mousecoords[1],closest) <= 50){
+        main.draggedNode = closest
+        main.highlightedNode = closest
+        inputNodeX2.value = main.highlightedNode.x;
+        inputNodeY2.value = main.highlightedNode.y;
+        btnDeleteNode.disabled = false;
+        inputNodeX2.disabled = false;
+        inputNodeY2.disabled = false;
+    }
+        
+    try{
+        main.updateNode(main.draggedNode.id,mousecoords[0],mousecoords[1])
+        main.generateNodeList("nodeList")
+        main.highlightNode(main.draggedNode.id)
+        main.update()
+
+
+
+    } catch(e){
+
+    }
+    
+
+    
+
+}
+canvas.onmousemove = (e)=>{
+    let mousecoords = getMousePosition(canvas,e)
+    if(e.buttons==1 && main.draggedNode!=null){
+        main.updateNode(main.draggedNode.id,mousecoords[0],mousecoords[1])
+        main.generateNodeList("nodeList")
+        inputNodeX2.value = main.highlightedNode.x;
+        inputNodeY2.value = main.highlightedNode.y;
+        main.highlightNode(main.draggedNode.id)
+    }
+}
+
+canvas.onmouseup = (e)=>{
+    main.update()
+
+    main.draggedNode = null
+    main.highlightedNode = null
+    btnDeleteNode.disabled = true;
+    inputNodeX2.disabled = true;
+    inputNodeY2.disabled = true;
+
+    main.update()
+
+}
