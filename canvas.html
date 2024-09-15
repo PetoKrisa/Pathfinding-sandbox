@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pathfinding</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div id="container" class="flex-row">
+        <div>
+        <canvas id="canvas" width="2000px" height="2000px">
+
+        </canvas>
+        <p class="hint">*2000x2000</p>
+        </div>
+        <div class="flex-col">
+            <div id="nodes">
+                <input type="button" value="Add" id="btnAddNode">
+                <input type="number" name="node-x" id="inputNodeX" placeholder="x" min="0" max="2000">
+                <input type="number" name="node-y" id="inputNodeY" placeholder="y" in="0" max="2000">
+                <hr>
+                <div id="nodeList">
+
+                </div>
+            </div>
+            <div id="paths">
+                <input type="button" value="Add" id="btnAddPath">
+                <input type="number" name="path-node-1" id="inputPathNode1" placeholder="Node1 id" min="0" max="2000">
+                <input type="number" name="path-node-2" id="inputPathNode2" placeholder="Node2 id" in="0" max="2000">
+                <hr>
+                <div id="pathList">
+            </div>
+        </div>
+        
+    </div>
+    <script type="module" src="./Main.js"></script>
+
+</body>
+</html>
