@@ -40,6 +40,27 @@ export class Main{
         
     }
 
+    drawGrid(){
+        for(let i = 0; i < 20; i++){
+            this.canvas.strokeStyle = "gray"
+            this.canvas.lineWidth = 1
+
+            this.canvas.beginPath()
+            this.canvas.moveTo(i*100, 0)
+            this.canvas.lineTo(i*100, 2000)
+            this.canvas.stroke()
+        }
+        for(let i = 0; i < 20; i++){
+            this.canvas.strokeStyle = "gray"
+            this.canvas.lineWidth = 1
+
+            this.canvas.beginPath()
+            this.canvas.moveTo(0, i*100)
+            this.canvas.lineTo(2000, i*100)
+            this.canvas.stroke()
+        }
+    }
+
     getDistanceFromNode(x,y,node){
         return Math.sqrt((Math.pow((x-node.x),2)+Math.pow((y-node.y),2)))
     }
@@ -67,10 +88,12 @@ export class Main{
         if(x!=undefined && y!=undefined){
             this.nodesList.push(new Node(this, this.nodesId, x,y))
         this.nodesId++;
-        this.update();
         } else{
             throw TypeError("X and Y cannot be undefined")
         }
+        this.generateNodeList("nodeList")
+        this.update();
+        console.log("addnode caller", this.addNode.caller)
         
     }
 
@@ -96,6 +119,7 @@ export class Main{
                 if(this.nodesList[i].id == id){
                     this.nodesList[i].x = x;
                     this.nodesList[i].y = y;
+
                     break
                 }
             }
@@ -220,6 +244,8 @@ document.addEventListener("focusin", function(e){
         btnDeleteNode.disabled = false;
         inputNodeX2.disabled = false;
         inputNodeY2.disabled = false;
+        labelEditNodeId.disabled = false;
+        labelEditNodeId.value = main.highlightedNode.id;
         inputNodeX2.value = main.highlightedNode.x;
         inputNodeY2.value = main.highlightedNode.y;
         
@@ -237,6 +263,11 @@ document.addEventListener("focusout", function(e){
 
 btnDeleteNode.onclick = (e)=>{
     main.deleteNode(main.highlightedNode.id)
+    btnDeleteNode.disabled = true;
+    inputNodeX2.disabled = true;
+    inputNodeY2.disabled = true;
+    labelEditNodeId.disabled = true;
+    labelEditNodeId.value = main.highlightedNode.id;
     main.generateNodeList("nodeList")
 }
 
@@ -258,7 +289,7 @@ document.addEventListener("focusin", function(e){
     const target = e.target.closest(".path-list-item");
     if(target){
         main.highlightPath(target.dataset.id)
-        this.update()
+        main.update()
 
         main.highlightedPath = main.getPath(target.dataset.id)
 
@@ -268,7 +299,7 @@ document.addEventListener("focusout", function(e){
     const target = e.target.closest(".path-list-item");
     if(target){
         main.update()
-        main.highlightedPath = null;
+        //main.highlightedPath = null;
     }
     });
 
@@ -294,6 +325,29 @@ function getMousePosition(canvas, event) {
     return [Math.round(x), Math.round(y)]
 }
 var canvas = document.getElementById("canvas")
+
+canvas.onmouseup = (e)=>{
+    if(main.draggedNode != null){
+        main.update()
+        main.draggedNode = null
+        main.highlightedNode = null
+        btnDeleteNode.disabled = true;
+        inputNodeX2.disabled = true;
+        inputNodeY2.disabled = true;
+        labelEditNodeId.disabled = true;
+        labelEditNodeId.value = "";
+
+        main.update()
+
+    }
+
+    
+
+
+
+
+}
+
 canvas.onmousedown = (e)=>{
     let mousecoords = getMousePosition(canvas,e)
     let closest = main.findClosestNode(mousecoords[0], mousecoords[1])
@@ -305,19 +359,17 @@ canvas.onmousedown = (e)=>{
         btnDeleteNode.disabled = false;
         inputNodeX2.disabled = false;
         inputNodeY2.disabled = false;
-    }
-        
-    try{
+        labelEditNodeId.disabled = false;
+        labelEditNodeId.value = main.highlightedNode.id;
+
+
         main.updateNode(main.draggedNode.id,mousecoords[0],mousecoords[1])
         main.generateNodeList("nodeList")
         main.highlightNode(main.draggedNode.id)
         main.update()
-
-
-
-    } catch(e){
-
     }
+        
+    
     
 
     
@@ -326,7 +378,14 @@ canvas.onmousedown = (e)=>{
 canvas.onmousemove = (e)=>{
     let mousecoords = getMousePosition(canvas,e)
     if(e.buttons==1 && main.draggedNode!=null){
-        main.updateNode(main.draggedNode.id,mousecoords[0],mousecoords[1])
+        console.log(e.shiftKey)
+        if(e.shiftKey){
+            main.updateNode(main.draggedNode.id,Math.round(mousecoords[0]/100)*100,Math.round(mousecoords[1]/100)*100)
+            main.drawGrid()
+        }   else{
+            main.updateNode(main.draggedNode.id,mousecoords[0],mousecoords[1])
+        }
+        
         main.generateNodeList("nodeList")
         inputNodeX2.value = main.highlightedNode.x;
         inputNodeY2.value = main.highlightedNode.y;
@@ -334,15 +393,3 @@ canvas.onmousemove = (e)=>{
     }
 }
 
-canvas.onmouseup = (e)=>{
-    main.update()
-
-    main.draggedNode = null
-    main.highlightedNode = null
-    btnDeleteNode.disabled = true;
-    inputNodeX2.disabled = true;
-    inputNodeY2.disabled = true;
-
-    main.update()
-
-}

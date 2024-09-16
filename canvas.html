@@ -13,6 +13,7 @@
 
         </canvas>
         <p class="hint">*2000x2000</p>
+        <p class="hint">LShift to snap to grid</p>
         </div>
         <div class="flex-col">
             <div id="nodes">
@@ -20,9 +21,10 @@
                 <input type="number" name="node-x" id="inputNodeX" placeholder="x" min="0" max="2000">
                 <input type="number" name="node-y" id="inputNodeY" placeholder="y" in="0" max="2000">
                 <hr>
+                <input type="text" maxlength="1" readonly id="labelEditNodeId">
                 <input type="button" value="Del" id="btnDeleteNode" disabled>
                 <input type="number" name="node-x2" id="inputNodeX2" placeholder="x" min="0" max="2000" disabled tabindex="1">
-                <input type="number" name="node-y2" id="inputNodeY2" placeholder="y" in="0" max="2000" disabled tabindex="1"> 
+                <input type="number" name="node-y2" id="inputNodeY2" placeholder="y" in="0" max="2000" disabled tabindex="1">
                 <hr>
                 <div id="nodeList">
 
