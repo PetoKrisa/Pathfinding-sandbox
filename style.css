@@ -24,6 +24,7 @@ body{
     display: inline-block;
     padding: 10px;
     margin: 15px;
+    width: 300px;
 }
 
 #nodes input, #paths input{
@@ -34,7 +35,7 @@ body{
     padding: 5px;
     width: 25%;
 }
-#labelEditNodeId{
+#labelEditNodeId, #labelEditPathId{
     width: 12pt !important;
 }
 

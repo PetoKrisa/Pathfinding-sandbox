@@ -42,6 +42,9 @@ export class Main{
 
     drawGrid(){
         for(let i = 0; i < 20; i++){
+            if(i==10){
+                continue
+            }
             this.canvas.strokeStyle = "gray"
             this.canvas.lineWidth = 1
 
@@ -52,6 +55,9 @@ export class Main{
         }
         for(let i = 0; i < 20; i++){
             this.canvas.strokeStyle = "gray"
+            if(i==10){
+                continue
+            }
             this.canvas.lineWidth = 1
 
             this.canvas.beginPath()
@@ -59,6 +65,20 @@ export class Main{
             this.canvas.lineTo(2000, i*100)
             this.canvas.stroke()
         }
+        this.canvas.lineWidth = 2
+
+        this.canvas.strokeStyle = "lightgreen"
+        this.canvas.beginPath()
+        this.canvas.moveTo(1000, 0)
+        this.canvas.lineTo(1000, 2000)
+        this.canvas.stroke()
+        
+        this.canvas.strokeStyle = "lightcoral"
+        this.canvas.beginPath()
+        this.canvas.moveTo(0, 1000)
+        this.canvas.lineTo(2000, 1000)
+        this.canvas.stroke()
+
     }
 
     getDistanceFromNode(x,y,node){
@@ -92,9 +112,7 @@ export class Main{
             throw TypeError("X and Y cannot be undefined")
         }
         this.generateNodeList("nodeList")
-        this.update();
-        console.log("addnode caller", this.addNode.caller)
-        
+        this.update();        
     }
 
     getNode(id){
@@ -135,6 +153,7 @@ export class Main{
             for(let i = 0; i < this.nodesList.length; i++){
                 if(this.nodesList[i].id == id){
                     this.nodesList.splice(i,1)
+                    this.highlightedNode = null;
                     break
                 }
             }
@@ -176,6 +195,46 @@ export class Main{
             }
         }
         return null;
+        }
+        catch(err){
+            alert(err)
+        }
+    }
+
+    updatePath(id, n1, n2){
+        try{
+            for(let i = 0; i < this.pathsList.length; i++){
+                if(this.pathsList[i].id == id){
+                    if(this.getNode(n1) == null || this.getNode(n2) == null){
+                        console.log("one of the nodes doesnt exist")
+                        break
+                    }
+                    this.pathsList[i].node1 = this.getNode(n1);
+                    this.pathsList[i].node2 = this.getNode(n2);
+
+                    break
+                }
+            }
+            this.update()
+        }
+        catch(err){
+            alert(err)
+        }
+    }
+
+    deletePath(id){
+        try{
+            for(let i = 0; i < this.pathsList.length; i++){
+                if(this.pathsList[i].id == id){
+                    this.pathsList.splice(i,1)
+                    this.highlightedPath = null;
+                    break
+                }
+            }
+            if(this.pathsList.length==0){
+                this.highlightedPath = null;
+            }
+            this.update()
         }
         catch(err){
             alert(err)
@@ -226,6 +285,46 @@ export class Main{
 
 const main = new Main("canvas")
 
+
+function UpdateEditNodeInputs(){
+    if(main.highlightedNode == null){
+        btnDeleteNode.disabled = true;
+        inputNodeX2.disabled = true;
+        inputNodeY2.disabled = true;
+        labelEditNodeId.disabled = true;
+        labelEditNodeId.value = "";
+        inputNodeX2.value = "";
+        inputNodeY2.value = "";
+    } else{
+        btnDeleteNode.disabled = false;
+        inputNodeX2.disabled = false;
+        inputNodeY2.disabled = false;
+        labelEditNodeId.disabled = false;
+        labelEditNodeId.value = main.highlightedNode.id;
+        inputNodeX2.value = main.highlightedNode.x;
+        inputNodeY2.value = main.highlightedNode.y;
+    }
+}
+
+function UpdateEditPathInputs(){
+    if(main.highlightedPath == null){
+        btnDeletePath.disabled = true;
+        inputPathNode12.disabled = true;
+        inputPathNode22.disabled = true;
+        labelEditPathId.disabled = true;
+        labelEditPathId.value = "";
+        inputPathNode12.value = "";
+        inputPathNode22.value = "";
+    } else{
+        btnDeletePath.disabled = false;
+        inputPathNode12.disabled = false;
+        inputPathNode22.disabled = false;
+        labelEditPathId.disabled = false;
+        labelEditPathId.value = main.highlightedPath.id;
+        inputPathNode12.value = main.highlightedPath.node1.id;
+        inputPathNode22.value = main.highlightedPath.node2.id;
+    }
+}
 //controls and event listeners to make the buttons do something
 
 //highlighting and CRUD operations
@@ -241,13 +340,7 @@ document.addEventListener("focusin", function(e){
         main.highlightedNode = main.getNode(target.dataset.id)
 
         target.classList.add("focus")
-        btnDeleteNode.disabled = false;
-        inputNodeX2.disabled = false;
-        inputNodeY2.disabled = false;
-        labelEditNodeId.disabled = false;
-        labelEditNodeId.value = main.highlightedNode.id;
-        inputNodeX2.value = main.highlightedNode.x;
-        inputNodeY2.value = main.highlightedNode.y;
+        UpdateEditNodeInputs()
         
 
     }
@@ -256,18 +349,42 @@ document.addEventListener("focusout", function(e){
     const target = e.target.closest(".node-list-item");
     if(target){
         main.update()
-        //main.highlightedNode = null;
         target.classList.remove("focus")
     }
     });
 
+
+
+
+
+//highlight paths, and path list items
+document.addEventListener("focusin", function(e){
+    const target = e.target.closest(".path-list-item");
+    if(target){
+        main.highlightPath(target.dataset.id)
+        main.update()
+
+        main.highlightedPath = main.getPath(target.dataset.id)
+        
+        target.classList.add("focus")
+        UpdateEditPathInputs()
+    }
+    });
+
+document.addEventListener("focusout", function(e){
+    const target = e.target.closest(".path-list-item");
+    if(target){
+        main.update()
+        target.classList.remove("focus")
+
+    }
+    });
+
+//crud operations on paths and nodes
+
 btnDeleteNode.onclick = (e)=>{
     main.deleteNode(main.highlightedNode.id)
-    btnDeleteNode.disabled = true;
-    inputNodeX2.disabled = true;
-    inputNodeY2.disabled = true;
-    labelEditNodeId.disabled = true;
-    labelEditNodeId.value = main.highlightedNode.id;
+    UpdateEditNodeInputs()
     main.generateNodeList("nodeList")
 }
 
@@ -282,28 +399,24 @@ inputNodeY2.oninput = (e)=>{
 
 }
 
+btnDeletePath.onclick = (e)=>{
+    main.deletePath(main.highlightedPath.id)
+    UpdateEditPathInputs()
+    main.generatePathList("pathList")
+}
+
+inputPathNode12.oninput = (e)=>{
+    main.updatePath(main.highlightedPath.id, inputPathNode12.value, inputPathNode22.value)
+    main.generatePathList("pathList")
+
+}
+inputPathNode22.oninput = (e)=>{
+    main.updatePath(main.highlightedPath.id, inputPathNode12.value, inputPathNode22.value)
+    main.generatePathList("pathList")
+
+}
 
 
-//highlight paths, and path list items
-document.addEventListener("focusin", function(e){
-    const target = e.target.closest(".path-list-item");
-    if(target){
-        main.highlightPath(target.dataset.id)
-        main.update()
-
-        main.highlightedPath = main.getPath(target.dataset.id)
-
-    }
-    });
-document.addEventListener("focusout", function(e){
-    const target = e.target.closest(".path-list-item");
-    if(target){
-        main.update()
-        //main.highlightedPath = null;
-    }
-    });
-
-//crud operations on paths and nodes
 btnAddNode.addEventListener('click', ()=>{
     main.addNode(inputNodeX.value, inputNodeY.value)
     main.generateNodeList("nodeList")
@@ -331,11 +444,7 @@ canvas.onmouseup = (e)=>{
         main.update()
         main.draggedNode = null
         main.highlightedNode = null
-        btnDeleteNode.disabled = true;
-        inputNodeX2.disabled = true;
-        inputNodeY2.disabled = true;
-        labelEditNodeId.disabled = true;
-        labelEditNodeId.value = "";
+        UpdateEditNodeInputs()
 
         main.update()
 
@@ -378,10 +487,10 @@ canvas.onmousedown = (e)=>{
 canvas.onmousemove = (e)=>{
     let mousecoords = getMousePosition(canvas,e)
     if(e.buttons==1 && main.draggedNode!=null){
-        console.log(e.shiftKey)
         if(e.shiftKey){
             main.updateNode(main.draggedNode.id,Math.round(mousecoords[0]/100)*100,Math.round(mousecoords[1]/100)*100)
             main.drawGrid()
+
         }   else{
             main.updateNode(main.draggedNode.id,mousecoords[0],mousecoords[1])
         }

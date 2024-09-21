@@ -21,7 +21,7 @@
                 <input type="number" name="node-x" id="inputNodeX" placeholder="x" min="0" max="2000">
                 <input type="number" name="node-y" id="inputNodeY" placeholder="y" in="0" max="2000">
                 <hr>
-                <input type="text" maxlength="1" readonly id="labelEditNodeId">
+                <input type="text" maxlength="1" readonly id="labelEditNodeId" disabled>
                 <input type="button" value="Del" id="btnDeleteNode" disabled>
                 <input type="number" name="node-x2" id="inputNodeX2" placeholder="x" min="0" max="2000" disabled tabindex="1">
                 <input type="number" name="node-y2" id="inputNodeY2" placeholder="y" in="0" max="2000" disabled tabindex="1">
@@ -32,8 +32,13 @@
             </div>
             <div id="paths">
                 <input type="button" value="Add" id="btnAddPath">
-                <input type="number" name="path-node-1" id="inputPathNode1" placeholder="Node1 id" min="0" max="2000">
+                <input type="number" name="path-node-1" id="inputPathNode1" placeholder="Node1 id" min="0" max="2000" >
                 <input type="number" name="path-node-2" id="inputPathNode2" placeholder="Node2 id" in="0" max="2000">
+                <hr>
+                <input type="text" maxlength="1" readonly id="labelEditPathId" disabled>
+                <input type="button" value="Del" id="btnDeletePath" disabled>
+                <input type="number" name="path-node-1-2" id="inputPathNode12" placeholder="Node1 id" min="0" max="2000" disabled tabindex="1">
+                <input type="number" name="path-node-1-2" id="inputPathNode22" placeholder="Node2 id" in="0" max="2000" disabled tabindex="1">
                 <hr>
                 <div id="pathList">
             </div>
