@@ -35,4 +35,30 @@ export class Node{
         
         this.isHighlighted = false
     }
+
+    addPathToList(path){
+        if(path == null){
+            throw new ReferenceError("Path to push can not be null")
+            return
+        }  
+        else {
+            this.paths.push(path)
+        }
+        
+
+    }
+
+    deletePathFromList(path){
+
+    }
+
+    isPathExist(path){
+        for(let i = 0; i < this.paths.length; i++){
+            if((this.paths[i].node1 == path.node1 && this.paths[i].node2 == path.node2)
+            || (this.paths[i].node2 == path.node1 && this.paths[i].node1 == path.node2)){
+                return true
+            }
+        } 
+        return false
+    }
 }

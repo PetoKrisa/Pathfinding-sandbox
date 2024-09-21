@@ -167,16 +167,31 @@ export class Main{
         }
     }
 
+
+
     addPath(node1Id, node2Id){
         try{
         let node1 = this.getNode(node1Id)
         let node2 = this.getNode(node2Id)
-        if(node1!=null && node2!=null){
-            this.pathsList.push(new Path(this,this.pathsId,node1,node2))
-            this.pathsId++;
-            this.update()
-        } else{
+        if(node1==node2){
+            throw new TypeError("Node1 and Node2 can not be the same")
+        }
+        else if(node1==null || node2 == null){
             throw new ReferenceError("Node1 or Node2 does not exist")
+        }
+        else{
+            let pathToPush = new Path(this,this.pathsId,node1,node2)
+            if(node1.isPathExist(pathToPush) || node2.isPathExist(pathToPush)){
+                throw new ReferenceError("Path already exists")
+            } 
+
+
+            this.pathsList.push(pathToPush)
+            this.pathsId++;
+            node1.addPathToList(pathToPush)
+            node2.addPathToList(pathToPush)
+            console.log(node1, node2)
+            this.update()
         }
         
         } catch(err){

@@ -27,4 +27,15 @@ export class Path{
         this.main.canvas.stroke()
         this.isHighlighted=false
     }
+
+    getNextNode(currentNode){
+        if(currentNode == this.node1){
+            return this.node2
+        } else if(currentNode == this.node2){
+            return this.node1
+        } else{
+            throw new ReferenceError("Couldn't get next node, since the currend node doesn't exist")
+        }
+    }
+
 }
