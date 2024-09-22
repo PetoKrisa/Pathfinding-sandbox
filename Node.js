@@ -49,7 +49,18 @@ export class Node{
     }
 
     deletePathFromList(path){
-
+        if(path == null){
+            throw new ReferenceError("Path to delete can not be null")
+            return
+        }  
+        else {
+            for(let i = 0; i < this.paths.length; i++){
+                if(path.id == this.paths[i].id){
+                    this.paths.splice(i,1)
+                    break
+                }
+            }
+        }
     }
 
     isPathExist(path){

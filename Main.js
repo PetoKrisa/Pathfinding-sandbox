@@ -173,12 +173,13 @@ export class Main{
         try{
         let node1 = this.getNode(node1Id)
         let node2 = this.getNode(node2Id)
-        if(node1==node2){
-            throw new TypeError("Node1 and Node2 can not be the same")
-        }
-        else if(node1==null || node2 == null){
+        if(node1==null || node2 == null){
             throw new ReferenceError("Node1 or Node2 does not exist")
         }
+        else if(node1==node2){
+            throw new TypeError("Node1 and Node2 can not be the same")
+        }
+        
         else{
             let pathToPush = new Path(this,this.pathsId,node1,node2)
             if(node1.isPathExist(pathToPush) || node2.isPathExist(pathToPush)){
@@ -190,7 +191,6 @@ export class Main{
             this.pathsId++;
             node1.addPathToList(pathToPush)
             node2.addPathToList(pathToPush)
-            console.log(node1, node2)
             this.update()
         }
         
@@ -221,11 +221,23 @@ export class Main{
             for(let i = 0; i < this.pathsList.length; i++){
                 if(this.pathsList[i].id == id){
                     if(this.getNode(n1) == null || this.getNode(n2) == null){
-                        console.log("one of the nodes doesnt exist")
+                        
                         break
                     }
-                    this.pathsList[i].node1 = this.getNode(n1);
-                    this.pathsList[i].node2 = this.getNode(n2);
+                    
+                    let currentPath = this.pathsList[i]
+
+                    currentPath.node1.deletePathFromList(currentPath)
+                    currentPath.node2.deletePathFromList(currentPath)
+
+
+                    let newNode1 = this.getNode(n1);
+                    let newNode2 = this.getNode(n2);
+                    newNode1.addPathToList(currentPath)
+                    newNode2.addPathToList(currentPath)
+
+                    this.pathsList[i].node1 = newNode1
+                    this.pathsList[i].node2 = newNode2
 
                     break
                 }
@@ -241,6 +253,12 @@ export class Main{
         try{
             for(let i = 0; i < this.pathsList.length; i++){
                 if(this.pathsList[i].id == id){
+                    let currentPath = this.pathsList[i]
+
+                    currentPath.node1.deletePathFromList(currentPath)
+                    currentPath.node2.deletePathFromList(currentPath)
+
+
                     this.pathsList.splice(i,1)
                     this.highlightedPath = null;
                     break
@@ -260,7 +278,7 @@ export class Main{
         let nodeListHtml = ""
         for(let i = 0; i<this.nodesList.length; i++){
             let node = this.nodesList[i]
-            nodeListHtml+= `<p data-id="${node.id}" class="list-item node-list-item" onclick="this.focus()" tabindex="1">${node.id} (${node.x};${node.y})</p>`
+            nodeListHtml+= `<p data-id="${node.id}" class="list-item node-list-item" onclick="this.focus()" tabindex="1">${node.id} (${node.x};${node.y}) - ${node.paths.length} deg</p>`
         }
         document.getElementById(elementId).innerHTML = nodeListHtml
     }
@@ -418,16 +436,22 @@ btnDeletePath.onclick = (e)=>{
     main.deletePath(main.highlightedPath.id)
     UpdateEditPathInputs()
     main.generatePathList("pathList")
+    main.generateNodeList("nodeList")
+
 }
 
 inputPathNode12.oninput = (e)=>{
     main.updatePath(main.highlightedPath.id, inputPathNode12.value, inputPathNode22.value)
     main.generatePathList("pathList")
+    main.generateNodeList("nodeList")
+
 
 }
 inputPathNode22.oninput = (e)=>{
     main.updatePath(main.highlightedPath.id, inputPathNode12.value, inputPathNode22.value)
     main.generatePathList("pathList")
+    main.generateNodeList("nodeList")
+
 
 }
 
@@ -440,6 +464,8 @@ btnAddNode.addEventListener('click', ()=>{
 btnAddPath.addEventListener('click', ()=>{
     main.addPath(inputPathNode1.value, inputPathNode2.value)
     main.generatePathList("pathList")
+    main.generateNodeList("nodeList")
+
 
 })
 
