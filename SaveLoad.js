@@ -5,4 +5,9 @@ export class SaveLoad{
         this.main = main;
         this.canvas = main.canvas;
     }
+
+    generateJSON(){
+        json = {nodes:[], paths:[]}
+        
+    }
 }

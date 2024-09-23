@@ -5,6 +5,9 @@ export class Node{
     paths = [];
     main;
     isHighlighted = false
+    isStart = false
+    isEnd = false
+    isProgress = false
 
     constructor(main,id,x,y){
         this.main = main
@@ -17,20 +20,32 @@ export class Node{
         
     }
     draw(){
-        if(!this.isHighlighted){
-            this.main.canvas.fillStyle = "white"
-
-        } else{
+        if(this.isHighlighted){
             this.main.canvas.fillStyle = "yellow"
+        }
+        else if (this.isProgress){
+            this.main.canvas.fillStyle = "green"
+        } 
+        else if (this.isStart){
+            this.main.canvas.fillStyle = "green"
+        } 
+        else if (this.isEnd){
+            this.main.canvas.fillStyle = "red"
+        } 
+        
+        else{
+            this.main.canvas.fillStyle = "white"
 
         }
         this.main.canvas.beginPath()
         this.main.canvas.arc(this.x, this.y, 40, 0, 2 * Math.PI)
         this.main.canvas.fill()
-
         
-        this.main.canvas.font = "50px Arial"
         this.main.canvas.fillStyle = "black"
+        if(this.isEnd){
+            this.main.canvas.fillStyle = "white"
+        }
+        this.main.canvas.font = "50px Arial"
         this.main.canvas.fillText(this.id, this.x-14, this.y+14)
         
         this.isHighlighted = false
@@ -71,5 +86,39 @@ export class Node{
             }
         } 
         return false
+    }
+
+    setProgress(){
+        this.isProgress=true;
+    }
+    unSetProgtess(){
+        this.isProgress=false
+    }
+
+    setStart(){
+        this.isStart=true;
+    }
+    unSetStart(){
+        this.isStart=false;
+    }
+
+    setEnd(){
+        this.isEnd=true;
+    }
+    unSetEnd(){
+        this.isEnd=false;
+    }
+
+    paths = [];
+    main;
+    isHighlighted = false
+    isStart = false
+    isEnd = false
+    isProgress = false
+    toJSON(){
+        return {id: this.id, x: this.x, y:this.y,
+            paths: this.paths, isHighlighted: this.isHighlighted,
+            
+        }
     }
 }

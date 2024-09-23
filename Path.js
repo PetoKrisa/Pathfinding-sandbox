@@ -4,6 +4,7 @@ export class Path{
     node1;
     node2;
     isHighlighted=false;
+    isProgress=false;
     constructor(main, id, node1, node2){
         this.main = main
         this.id = id
@@ -16,10 +17,15 @@ export class Path{
     }
     draw(){
         this.main.canvas.lineWidth = 30
-        if(!this.isHighlighted){
-            this.main.canvas.strokeStyle = "white"
-        } else{
+        
+        if (this.isProgress){
+            this.main.canvas.fillStyle = "green"
+        } 
+        else if(this.isHighlighted){
             this.main.canvas.strokeStyle = "yellow"
+        }
+        else{
+            this.main.canvas.strokeStyle = "white"
         }
         this.main.canvas.beginPath()
         this.main.canvas.moveTo(this.node1.x, this.node1.y)
@@ -38,4 +44,10 @@ export class Path{
         }
     }
 
+    setProgress(){
+        this.isProgress=true;
+    }
+    unSetProgtess(){
+        this.isProgress=false
+    }
 }

@@ -18,7 +18,7 @@ body{
     border-radius: 10px;
 }
 
-#nodes, #paths{
+#nodes, #paths, #save{
     border: 1px solid var(--accent);
     border-radius: 10px;
     display: inline-block;
@@ -61,7 +61,7 @@ input:disabled:active{
     justify-content: left;
 }
 #nodeList, #pathList{
-    max-height: 30vh;
+    max-height: 18vh;
     overflow-y: scroll;
 }
 
