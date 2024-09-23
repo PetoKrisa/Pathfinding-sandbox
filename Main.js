@@ -158,13 +158,22 @@ export class Main{
 
     deleteNode(id){
         try{
+
             for(let i = 0; i < this.nodesList.length; i++){
                 if(this.nodesList[i].id == id){
+                    let pathLength = this.nodesList[i].paths.length
+                    let pathsListToDelete = [...this.nodesList[i].paths]
+                    for(let x = 0; x<pathLength; x++){
+                        this.deletePath(pathsListToDelete[x].id)
+                    }
                     this.nodesList.splice(i,1)
                     this.highlightedNode = null;
                     break
                 }
             }
+
+
+
             if(this.nodesList.length==0){
                 this.highlightedNode = null;
             }
