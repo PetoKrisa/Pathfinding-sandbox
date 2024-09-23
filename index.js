@@ -12,6 +12,11 @@ function UpdateEditNodeInputs(){
         labelEditNodeId.value = "";
         inputNodeX2.value = "";
         inputNodeY2.value = "";
+
+        btnStart.disabled = true
+        btnEnd.disabled = true
+        btnStart.checked = false
+        btnEnd.checked = false
     } else{
         btnDeleteNode.disabled = false;
         inputNodeX2.disabled = false;
@@ -20,6 +25,13 @@ function UpdateEditNodeInputs(){
         labelEditNodeId.value = main.highlightedNode.id;
         inputNodeX2.value = main.highlightedNode.x;
         inputNodeY2.value = main.highlightedNode.y;
+
+        btnStart.disabled = false
+        btnEnd.disabled = false
+        btnStart.checked = false
+        btnEnd.checked = false
+        if(main.highlightedNode.isStart){btnStart.checked = true}
+        if(main.highlightedNode.isEnd){btnEnd.checked = true}
     }
 }
 
@@ -116,6 +128,23 @@ inputNodeY2.oninput = (e)=>{
 
 }
 
+btnStart.oninput = (e)=>{
+    if(btnStart.checked){
+        main.setStartNode(main.highlightedNode.id)
+    } else{
+        main.unSetStartNodes()
+    }
+    UpdateEditNodeInputs()
+}
+btnEnd.oninput = (e)=>{
+    if(btnEnd.checked){
+        main.setEndNode(main.highlightedNode.id)
+    } else{
+        main.unSetEndNodes()
+    }
+    UpdateEditNodeInputs()
+}
+
 btnDeletePath.onclick = (e)=>{
     main.deletePath(main.highlightedPath.id)
     UpdateEditPathInputs()
@@ -173,12 +202,6 @@ canvas.onmouseup = (e)=>{
         main.update()
 
     }
-
-    
-
-
-
-
 }
 
 canvas.onmousedown = (e)=>{
@@ -187,14 +210,7 @@ canvas.onmousedown = (e)=>{
     if(main.getDistanceFromNode(mousecoords[0],mousecoords[1],closest) <= 50){
         main.draggedNode = closest
         main.highlightedNode = closest
-        inputNodeX2.value = main.highlightedNode.x;
-        inputNodeY2.value = main.highlightedNode.y;
-        btnDeleteNode.disabled = false;
-        inputNodeX2.disabled = false;
-        inputNodeY2.disabled = false;
-        labelEditNodeId.disabled = false;
-        labelEditNodeId.value = main.highlightedNode.id;
-
+        UpdateEditNodeInputs()
 
         main.updateNode(main.draggedNode.id,mousecoords[0],mousecoords[1])
         main.generateNodeList("nodeList")
@@ -224,4 +240,8 @@ canvas.onmousemove = (e)=>{
         inputNodeY2.value = main.highlightedNode.y;
         main.highlightNode(main.draggedNode.id)
     }
+}
+
+btnSave.onclick = (e)=>{
+    main.saveLoad.generateJSON()
 }

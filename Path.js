@@ -50,4 +50,12 @@ export class Path{
     unSetProgtess(){
         this.isProgress=false
     }
+
+    toJSON(){
+        return{
+            id: this.id, node1: this.node1.id, node2: this.node2.id,
+            
+        }
+    }
+
 }

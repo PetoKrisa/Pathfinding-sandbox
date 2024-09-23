@@ -109,16 +109,14 @@ export class Node{
         this.isEnd=false;
     }
 
-    paths = [];
-    main;
-    isHighlighted = false
-    isStart = false
-    isEnd = false
-    isProgress = false
+
     toJSON(){
+        let pathsIdList = []
+        for(let i = 0; i<this.paths.length;i++){
+            pathsIdList.push(this.paths[i].id)
+        }
         return {id: this.id, x: this.x, y:this.y,
-            paths: this.paths, isHighlighted: this.isHighlighted,
-            
+            paths: pathsIdList, isStart: this.isStart, isEnd: this.isEnd
         }
     }
 }

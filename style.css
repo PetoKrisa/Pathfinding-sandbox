@@ -27,7 +27,7 @@ body{
     width: 300px;
 }
 
-#nodes input, #paths input{
+#nodes input, #paths input, #save input{
     color: var(--accent);
     background-color: var(--foreground);
     border: 1px var(--accent) solid;

@@ -25,6 +25,9 @@
                 <input type="button" value="Del" id="btnDeleteNode" disabled>
                 <input type="number" name="node-x2" id="inputNodeX2" placeholder="x" min="0" max="2000" disabled tabindex="1">
                 <input type="number" name="node-y2" id="inputNodeY2" placeholder="y" in="0" max="2000" disabled tabindex="1">
+                <br>
+                <label for="btnStart" >Start</label><input type="checkbox" name="btnStart" id="btnStart" disabled>
+                <label for="btnEnd">End</label><input type="checkbox" name="btnEnd" id="btnEnd" disabled>
                 <hr>
                 <div id="nodeList">
 
@@ -43,7 +46,9 @@
                 <div id="pathList">
                 </div>
             </div>
-            <div id="save"></div>
+            <div id="save">
+                <input type="button" value="Save" id="btnSave">
+            </div>
         </div>
         <script type="module" src="./index.js"></script>
     </div>

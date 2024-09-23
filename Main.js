@@ -314,29 +314,35 @@ export class Main{
         for(let i = 0; i<this.nodesList.length;i++){
             this.nodesList[i].unSetStart()
         }
-        main.update()
+        this.update()
 
     }
 
     setStartNode(id){
         let node = this.getNode(id)
         this.unSetStartNodes()
+        if(node.isEnd){
+            node.unSetEnd()
+        }
         node.setStart()
-        main.update()
+        this.update()
     }
 
     unSetEndNodes(){
         for(let i = 0; i<this.nodesList.length;i++){
             this.nodesList[i].unSetEnd()
         }
-        main.update()
+        this.update()
 
     }
     setEndNode(id){
         let node = this.getNode(id)
         this.unSetEndNodes()
+        if(node.isStart){
+            node.unSetStart()
+        }
         node.setEnd()
-        main.update()
+        this.update()
     }
 
     unSetAllProgress(){
@@ -346,19 +352,19 @@ export class Main{
         for(let i = 0; i<this.pathsList.length;i++){
             this.pathsList[i].unSetProgress()
         }
-        main.update()
+        this.update()
 
     }
 
     setNodeProgress(id){
         let node = this.getNode(id)
         node.setProgress()
-        main.update()
+        this.update()
     }
     setPathProgress(id){
         let path = this.getPath(id)
         path.setProgress()
-        main.update()
+        this.update()
     }
     
 } 
