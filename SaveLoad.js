@@ -19,7 +19,7 @@ export class SaveLoad{
       }
 
     generateJSON(fileName){
-        let json = {nodesId: this.main.nodesId, pathsId: this.main.pathsId, nodes:[], paths:[]}
+        let json = {bgImageName: this.main.bgImageName, nodesId: this.main.nodesId, pathsId: this.main.pathsId, nodes:[], paths:[]}
         for(let i = 0; i < this.main.nodesList.length; i++){
             json.nodes.push(this.main.nodesList[i].toJSON())
         }
@@ -43,6 +43,7 @@ export class SaveLoad{
         let json = JSON.parse(_json)
         this.main.nodesId = json.nodesId
         this.main.pathsId = json.pathsId
+        if(json.bgImageName != undefined){this.addBackground(json.bgImageName)}
 
         for(let i = 0; i < json.nodes.length; i++){
             let node = json.nodes[i]
@@ -66,5 +67,24 @@ export class SaveLoad{
         this.main.update()
         this.main.generateNodeList("nodeList")
         this.main.generatePathList("pathList")
+    }
+
+    async addBackground(fileName){
+        if(fileName == "" || fileName == undefined){return}
+        try{
+            let results = await fetch(`/saves/${fileName}`)
+            let blob = await results.blob()
+            if(results.status == 404){
+                throw new Error("Image does not exist")
+            } else{
+                this.main.bgImageName = fileName;
+                this.main.bgBlob = await createImageBitmap(blob);
+                this.main.update()
+            }
+            
+        } catch(e){
+            alert(e)
+        }
+        
     }
 }

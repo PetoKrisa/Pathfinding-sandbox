@@ -13,6 +13,8 @@ export class Main{
     pathsList = []
     nodesId = 0;
     pathsId = 0;
+    bgImageName;
+    bgBlob;
 
     highlightedNode;
     highlightedPath;
@@ -31,6 +33,12 @@ export class Main{
 
     draw(){
         this.canvas.clearRect(0,0,2000,2000)
+        if(this.bgBlob != undefined && this.bgImageName != undefined) {
+            this.canvas.globalAlpha = 0.45
+            this.canvas.drawImage(this.bgBlob, 0, 0, 2000, 2000);
+            this.canvas.globalAlpha = 1
+
+        }
         for(let i = 0; i < this.pathsList.length; i++){
             this.pathsList[i].draw()
         }

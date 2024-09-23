@@ -249,3 +249,12 @@ btnSave.onclick = (e)=>{
 btnLoad.onclick = (e)=>{
     main.saveLoad.load(inputFileName.value)
 }
+
+btnAddBg.onclick = (e)=>{
+    main.saveLoad.addBackground(inputBgName.value)
+}
+
+btnDelBg.onclick = (e)=>{
+    main.bgBlob = undefined;
+    main.bgImageName = undefined;
+}
