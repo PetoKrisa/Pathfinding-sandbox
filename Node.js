@@ -38,14 +38,14 @@ export class Node{
 
         }
         this.main.canvas.beginPath()
-        this.main.canvas.arc(this.x, this.y, 40, 0, 2 * Math.PI)
+        this.main.canvas.arc(this.x, this.y, 32, 0, 2 * Math.PI)
         this.main.canvas.fill()
         
         this.main.canvas.fillStyle = "black"
         if(this.isEnd){
             this.main.canvas.fillStyle = "white"
         }
-        this.main.canvas.font = "50px Arial"
+        this.main.canvas.font = "45px Arial"
         this.main.canvas.fillText(this.id, this.x-14, this.y+14)
         
         this.isHighlighted = false

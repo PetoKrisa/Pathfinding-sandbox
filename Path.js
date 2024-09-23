@@ -16,7 +16,7 @@ export class Path{
 
     }
     draw(){
-        this.main.canvas.lineWidth = 30
+        this.main.canvas.lineWidth = 20
         
         if (this.isProgress){
             this.main.canvas.fillStyle = "green"
@@ -32,6 +32,7 @@ export class Path{
         this.main.canvas.lineTo(this.node2.x, this.node2.y)
         this.main.canvas.stroke()
         this.isHighlighted=false
+
     }
 
     getNextNode(currentNode){
@@ -49,6 +50,10 @@ export class Path{
     }
     unSetProgtess(){
         this.isProgress=false
+    }
+
+    getLength(){
+        return Math.sqrt((Math.pow((this.node1.x-this.node2.x),2)+Math.pow((this.node1.y-this.node2.y),2)))
     }
 
     toJSON(){

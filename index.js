@@ -243,5 +243,9 @@ canvas.onmousemove = (e)=>{
 }
 
 btnSave.onclick = (e)=>{
-    main.saveLoad.generateJSON()
+    main.saveLoad.generateJSON(inputFileName.value)
+}
+
+btnLoad.onclick = (e)=>{
+    main.saveLoad.load(inputFileName.value)
 }
