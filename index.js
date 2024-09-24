@@ -118,12 +118,12 @@ btnDeleteNode.onclick = (e)=>{
 }
 
 inputNodeX2.oninput = (e)=>{
-    main.updateNode(main.highlightedNode.id, inputNodeX2.value, inputNodeY2.value)
+    main.updateNode(main.highlightedNode.id, parseInt(inputNodeX2.value), parseInt(inputNodeY2.value))
     main.generateNodeList("nodeList")
 
 }
 inputNodeY2.oninput = (e)=>{
-    main.updateNode(main.highlightedNode.id, inputNodeX2.value, inputNodeY2.value)
+    main.updateNode(main.highlightedNode.id, parseInt(inputNodeX2.value),parseInt(inputNodeY2.value))
     main.generateNodeList("nodeList")
 
 }
@@ -169,11 +169,25 @@ inputPathNode22.oninput = (e)=>{
 }
 
 
-btnAddNode.addEventListener('click', ()=>{
-    main.addNode(inputNodeX.value, inputNodeY.value)
+btnAddNode.addEventListener('click', (e)=>{
+    let x;
+    let y;
+    
+    if(inputNodeX.value == ""){
+        x = 0;
+    }
+    if(inputNodeY.value == ""){
+        y = 0;
+    }
+    if(inputNodeX.value != "" && inputNodeY.value != ""){
+        x = parseInt(inputNodeY.value)
+        y = parseInt(inputNodeY.value)
+    }
+
+    main.addNode(x, y)
     main.generateNodeList("nodeList")
 })
-btnAddPath.addEventListener('click', ()=>{
+btnAddPath.addEventListener('click', (e)=>{
     main.addPath(inputPathNode1.value, inputPathNode2.value)
     main.generatePathList("pathList")
     main.generateNodeList("nodeList")
@@ -217,12 +231,6 @@ canvas.onmousedown = (e)=>{
         main.highlightNode(main.draggedNode.id)
         main.update()
     }
-        
-    
-    
-
-    
-
 }
 canvas.onmousemove = (e)=>{
     let mousecoords = getMousePosition(canvas,e)

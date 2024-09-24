@@ -141,14 +141,9 @@ export class Main{
 
     updateNode(id, x, y){
         try{
-            for(let i = 0; i < this.nodesList.length; i++){
-                if(this.nodesList[i].id == id){
-                    this.nodesList[i].x = x;
-                    this.nodesList[i].y = y;
-
-                    break
-                }
-            }
+            let nodeToUpdate = this.getNode(id)
+            nodeToUpdate.x = x
+            nodeToUpdate.y = y
             this.update()
         }
         catch(err){

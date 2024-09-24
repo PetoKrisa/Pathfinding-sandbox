@@ -45,8 +45,13 @@ export class Node{
         if(this.isEnd){
             this.main.canvas.fillStyle = "white"
         }
-        this.main.canvas.font = "45px Arial"
-        this.main.canvas.fillText(this.id, this.x-14, this.y+14)
+
+        let fontSize = 45
+        this.main.canvas.font = `${45}px monospace`
+        let offset = fontSize/3.5
+        let textx = this.x - (offset + (offset * (String(this.id).length-1)))
+        let texty = this.y + (offset)
+        this.main.canvas.fillText(this.id, textx, texty)
         
         this.isHighlighted = false
     }
