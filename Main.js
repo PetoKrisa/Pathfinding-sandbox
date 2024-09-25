@@ -379,4 +379,18 @@ export class Main{
         this.update()
     }
     
+    isThereStartAndEnd(){
+        let start = false
+        let end = false
+        for(let i = 0; i<this.nodesList.length;i++){
+            if(this.nodesList[i].isStart){ start = true}
+        }
+        for(let i = 0; i<this.nodesList.length;i++){
+            if(this.nodesList[i].isEnd){ end = true}
+        }
+        if(start&&end){return true}
+        else{return false}
+    }
+
+
 } 

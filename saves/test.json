@@ -1,0 +1,125 @@
+{
+	"nodesId": 6,
+	"pathsId": 9,
+	"nodes": [
+		{
+			"id": 0,
+			"x": 499,
+			"y": 970,
+			"paths": [
+				0,
+				1
+			],
+			"isStart": true,
+			"isEnd": false
+		},
+		{
+			"id": 1,
+			"x": 800,
+			"y": 700,
+			"paths": [
+				0,
+				2,
+				3
+			],
+			"isStart": false,
+			"isEnd": false
+		},
+		{
+			"id": 2,
+			"x": 800,
+			"y": 1137,
+			"paths": [
+				1,
+				2,
+				4,
+				5
+			],
+			"isStart": false,
+			"isEnd": false
+		},
+		{
+			"id": 3,
+			"x": 1204,
+			"y": 731,
+			"paths": [
+				3,
+				4,
+				6,
+				8
+			],
+			"isStart": false,
+			"isEnd": false
+		},
+		{
+			"id": 4,
+			"x": 1200,
+			"y": 1200,
+			"paths": [
+				5,
+				6,
+				7
+			],
+			"isStart": false,
+			"isEnd": false
+		},
+		{
+			"id": 5,
+			"x": 1509,
+			"y": 913,
+			"paths": [
+				7,
+				8
+			],
+			"isStart": false,
+			"isEnd": true
+		}
+	],
+	"paths": [
+		{
+			"id": 0,
+			"node1": 0,
+			"node2": 1
+		},
+		{
+			"id": 1,
+			"node1": 0,
+			"node2": 2
+		},
+		{
+			"id": 2,
+			"node1": 1,
+			"node2": 2
+		},
+		{
+			"id": 3,
+			"node1": 1,
+			"node2": 3
+		},
+		{
+			"id": 4,
+			"node1": 2,
+			"node2": 3
+		},
+		{
+			"id": 5,
+			"node1": 2,
+			"node2": 4
+		},
+		{
+			"id": 6,
+			"node1": 3,
+			"node2": 4
+		},
+		{
+			"id": 7,
+			"node1": 5,
+			"node2": 4
+		},
+		{
+			"id": 8,
+			"node1": 5,
+			"node2": 3
+		}
+	]
+}

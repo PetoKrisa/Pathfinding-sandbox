@@ -17,9 +17,8 @@ export class Path{
     }
     draw(){
         this.main.canvas.lineWidth = 20
-        
         if (this.isProgress){
-            this.main.canvas.fillStyle = "green"
+            this.main.canvas.strokeStyle = "green"
         } 
         else if(this.isHighlighted){
             this.main.canvas.strokeStyle = "yellow"
@@ -27,6 +26,8 @@ export class Path{
         else{
             this.main.canvas.strokeStyle = "white"
         }
+
+        
         this.main.canvas.beginPath()
         this.main.canvas.moveTo(this.node1.x, this.node1.y)
         this.main.canvas.lineTo(this.node2.x, this.node2.y)
@@ -48,7 +49,7 @@ export class Path{
     setProgress(){
         this.isProgress=true;
     }
-    unSetProgtess(){
+    unSetProgress(){
         this.isProgress=false
     }
 
@@ -59,7 +60,6 @@ export class Path{
     toJSON(){
         return{
             id: this.id, node1: this.node1.id, node2: this.node2.id,
-            
         }
     }
 

@@ -11,6 +11,11 @@ body{
     font-family: Arial, Helvetica, sans-serif;
 }
 
+*{
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
 #canvas{
     width: 800px;
     height: 800px;
@@ -18,16 +23,17 @@ body{
     border-radius: 10px;
 }
 
-#nodes, #paths, #save{
+#nodes, #paths, #save, #controls{
     border: 1px solid var(--accent);
     border-radius: 10px;
     display: inline-block;
     padding: 10px;
-    margin: 15px;
+    margin-left: 15px;
+    margin-bottom: 15px;
     width: 300px;
 }
 
-#nodes input, #paths input, #save input{
+#nodes input, #paths input, #save input, #controls input{
     color: var(--accent);
     background-color: var(--foreground);
     border: 1px var(--accent) solid;
@@ -35,6 +41,8 @@ body{
     padding: 5px;
     width: 25%;
 }
+
+
 #labelEditNodeId, #labelEditPathId{
     width: 12pt !important;
 }
@@ -61,7 +69,7 @@ input:disabled:active{
     justify-content: left;
 }
 #nodeList, #pathList{
-    max-height: 18vh;
+    max-height: 17.9vh;
     overflow-y: scroll;
 }
 

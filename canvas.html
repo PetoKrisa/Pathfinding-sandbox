@@ -49,7 +49,7 @@
             <div id="save">
                 <input type="button" value="Save" id="btnSave">
                 <input type="text" placeholder="File name" id="inputFileName">
-                <input type="button" value="Load" id="btnLoad">
+                <input type="button" value="Load" id="btnLoad"> 
                 <p class="hint">/saves/&lt;fileName&gt;.json</p>
                 <input type="button" value="Add Bg" id="btnAddBg">
                 <input type="text" placeholder="Bg name" id="inputBgName">
@@ -57,10 +57,18 @@
                 <p class="hint">/saves/&lt;fileName&gt;.&lt;extension&gt;</p></p>
 
             </div>
+            <div id="controls">
+                <input type="button" value="Start" id="btnStartPath" name="btnStartPath">
+                <input type="button" value="Reset" id="btnResetPath" name="btnResetPath">
+                <input type="text" placeholder="Delay (ms)" id="inputDelay" value="">
+                <p class="hint">Delay will slow down the pathfinding visualiser. 0=instant, default=120</p>
+
+            </div>
         </div>
-        <script type="module" src="./index.js"></script>
+
     </div>
     
+    <script type="module" src="./index.js"></script>
 
 </body>
 </html>

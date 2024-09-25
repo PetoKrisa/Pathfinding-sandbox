@@ -9,6 +9,7 @@ export class Node{
     isEnd = false
     isProgress = false
 
+
     constructor(main,id,x,y){
         this.main = main
         this.id = id
@@ -42,7 +43,7 @@ export class Node{
         this.main.canvas.fill()
         
         this.main.canvas.fillStyle = "black"
-        if(this.isEnd){
+        if(this.isEnd || this.isStart){
             this.main.canvas.fillStyle = "white"
         }
 
@@ -96,7 +97,7 @@ export class Node{
     setProgress(){
         this.isProgress=true;
     }
-    unSetProgtess(){
+    unSetProgress(){
         this.isProgress=false
     }
 

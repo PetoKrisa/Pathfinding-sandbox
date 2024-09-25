@@ -1,7 +1,8 @@
+import { Dijkstra } from "./Dijkstra.js";
 import { Main } from "./main.js"
 
 const main = new Main("canvas")
-
+const pathfindig = new Dijkstra(main)
 
 function UpdateEditNodeInputs(){
     if(main.highlightedNode == null){
@@ -210,7 +211,6 @@ canvas.onmouseup = (e)=>{
     if(main.draggedNode != null){
         main.update()
         main.draggedNode = null
-        main.highlightedNode = null
         UpdateEditNodeInputs()
 
         main.update()
@@ -226,7 +226,7 @@ canvas.onmousedown = (e)=>{
         main.highlightedNode = closest
         UpdateEditNodeInputs()
 
-        main.updateNode(main.draggedNode.id,mousecoords[0],mousecoords[1])
+        //main.updateNode(main.draggedNode.id,mousecoords[0],mousecoords[1])
         main.generateNodeList("nodeList")
         main.highlightNode(main.draggedNode.id)
         main.update()
@@ -263,6 +263,21 @@ btnAddBg.onclick = (e)=>{
 }
 
 btnDelBg.onclick = (e)=>{
+    console.log("delbg")
     main.bgBlob = undefined;
     main.bgImageName = undefined;
+    main.update()
+}
+
+btnStartPath.onclick = (e)=>{
+    if(inputDelay.value == ""){
+        pathfindig.start()
+    } else{
+        pathfindig.start(inputDelay.value)
+
+    }
+}
+
+btnResetPath.onclick = (e)=>{
+    main.unSetAllProgress()
 }
