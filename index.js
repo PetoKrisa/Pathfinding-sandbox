@@ -281,3 +281,11 @@ btnStartPath.onclick = (e)=>{
 btnResetPath.onclick = (e)=>{
     main.unSetAllProgress()
 }
+
+document.addEventListener("keyup", (e)=>{
+    if(e.key == "Control"){
+        e.preventDefault()
+        main.toggleEditMode()
+        main.update()
+    }
+})

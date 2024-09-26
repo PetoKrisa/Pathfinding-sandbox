@@ -17,10 +17,9 @@ export class Node{
         this.y = y
     }
 
-    update(){
-        
-    }
+  
     draw(){
+        if(!this.main.editMode){return}
         if(this.isHighlighted){
             this.main.canvas.fillStyle = "yellow"
         }

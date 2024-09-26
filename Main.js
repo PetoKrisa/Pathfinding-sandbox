@@ -15,19 +15,19 @@ export class Main{
     pathsId = 0;
     bgImageName;
     bgBlob;
+    editMode = true
 
     highlightedNode;
     highlightedPath;
 
     draggedNode = null;
 
+    toggleEditMode(){
+        this.editMode = !this.editMode
+    }
+
     update(){
-        for(let i = 0; i < this.pathsList.length; i++){
-            this.pathsList[i].update()
-        }
-        for(let i = 0; i < this.nodesList.length; i++){
-            this.nodesList[i].update()
-        }
+        
         this.draw()
     }
 

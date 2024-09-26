@@ -12,11 +12,14 @@ export class Path{
         this.node2 = node2
     }
 
-    update(){
 
-    }
     draw(){
-        this.main.canvas.lineWidth = 20
+        this.main.canvas.lineCap = "round";
+        if(this.main.editMode){
+            this.main.canvas.lineWidth = 20
+        } else{
+            this.main.canvas.lineWidth = 10
+        }
         if (this.isProgress){
             this.main.canvas.strokeStyle = "green"
         } 
