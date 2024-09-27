@@ -18,7 +18,7 @@ export class Path{
         if(this.main.editMode){
             this.main.canvas.lineWidth = 20
         } else{
-            this.main.canvas.lineWidth = 10
+            this.main.canvas.lineWidth = 15
         }
         if (this.isProgress){
             this.main.canvas.strokeStyle = "green"

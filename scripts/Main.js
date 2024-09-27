@@ -42,6 +42,14 @@ export class Main{
         for(let i = 0; i < this.pathsList.length; i++){
             this.pathsList[i].draw()
         }
+        if(!this.editMode){
+            for(let i = 0; i < this.pathsList.length; i++){
+                if(this.pathsList[i].isProgress){
+                    this.pathsList[i].draw()
+                }
+            }
+        }
+        
         for(let i = 0; i < this.nodesList.length; i++){
             this.nodesList[i].draw()
         }
