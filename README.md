@@ -73,14 +73,14 @@ Save file model:
 ```
 - `nodesId` and `PathsId` are stored to the app knows what id to give the next added node and path
 	- it is incremented every time
-#### 3.4.2 Bacground image
+#### 3.4.2 Background image
 - You can add an image from `/saves/` if you enter the name into the 2nd input
 	- like this `/saves/<imageName>.<imageExtension>`
 - The backgorund image is stored as a bitmap and drawn on the canvas
 - The background image name is stored as a variable and saved into the save file
 - if the `bgImageName` is not empty then it will load the everytime you load a save
 - you can remove the background with the `Del Bg` button, you should save the .json file again to prevent the app from loading it again when loading the save
-### 3.5 Pathfinging controls (4th tab)
+### 3.5 Pathfinding controls (4th tab)
 - When you press `Start` and a starting and ending node is specified, the pathfinding algorithm starts (Dijkstra)
 - The algorithm higghlights every patth and node it touches, and if it finds the end it only higlights the shortest path
 - `Reset` button removes higlighting
