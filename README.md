@@ -35,7 +35,7 @@ Since this app uses js-modules, and fetch requests, you need a generic http or p
 - Holding `Alt` while clicking on the canvas will place a node at your cursor
 - There is a range slider below the canvas, which sets the scale of nodes and paths, which allows you to see better
 - And finally there is a button labelled `Import OSM map` which opens an import dialoge
-#### 3.1.1 How to import an OSM map
+#### 3.1.2 How to import an OSM map
 1. Click the `Import OSM map` button
 2. Go to [OpenStreetMap](https://www.openstreetmap.org/export)
 3. Press `Manually select a different area`
@@ -43,7 +43,7 @@ Since this app uses js-modules, and fetch requests, you need a generic http or p
 	- **Keep it as square as possible**, because when mapping the coordinates to the canvas the app will stretch it to fit in a square, causing distorsions
 5. Copy the coordinates from the top left of the screen from OpenStreetMap to the corresponging inputs in the Pathfinding Sandbox app
 	- The **North**, **West**, **East**, **South** inputs are arranged the same way as in OpenStreetMap
-	- The default values will load the city center of **Budapest**, which is a large area with many nodes, pull the scale slider to 0.2x and toggle `edit mode` with `ctrl+e` before loading, and keep in mind that it might take 10+ secounds depending on performance
+	- The default values will load the city center of **Budapest**, which is a large area with many nodes, pull the scale slider to 0.2x and toggle `edit mode` with `ctrl+e` before loading, and keep in mind that it might take 10+ seconds depending on performance
 6. Click Import
 ### 3.2 Nodes tab (1st tab)
 #### 3.2.1 Controls
