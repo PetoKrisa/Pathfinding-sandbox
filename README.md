@@ -35,7 +35,7 @@ Since this app uses js-modules, and fetch requests, you need a generic http or p
 - Holding `Alt` while clicking on the canvas will place a node at your cursor
 - There is a range slider below the canvas, which sets the scale of nodes and paths, which allows you to see better
 - And finally there is a button labelled `Import OSM map` which opens an import dialoge
-#### 3.1.1 How to import an OSM map
+#### 3.1.2 How to import an OSM map
 1. Click the `Import OSM map` button
 2. Go to [OpenStreetMap](https://www.openstreetmap.org/export)
 3. Press `Manually select a different area`
