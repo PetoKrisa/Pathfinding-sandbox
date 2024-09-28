@@ -43,7 +43,7 @@ Since this app uses js-modules, and fetch requests, you need a generic http or p
 	- **Keep it as square as possible**, because when mapping the coordinates to the canvas the app will stretch it to fit in a square, causing distorsions
 5. Copy the coordinates from the top left of the screen from OpenStreetMap to the corresponging inputs in the Pathfinding Sandbox app
 	- The **North**, **West**, **East**, **South** inputs are arranged the same way as in OpenStreetMap
-	- The default values will load the city center of **Budapest**, which is a large area with many nodes, pull the scale slider to 0.2x and toggle `edit mode` with `ctrl+e` before loading, and keep in mind that it might take 10+ secounds depending on performance
+	- The default values will load the city center of **Budapest**, which is a large area with many nodes, pull the scale slider to 0.2x and toggle `edit mode` with `ctrl+e` before loading, and keep in mind that it might take 10+ seconds depending on performance
 6. Click Import
 ### 3.2 Nodes tab (1st tab)
 #### 3.2.1 Controls
