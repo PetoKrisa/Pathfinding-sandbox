@@ -1,7 +1,7 @@
 import { Node } from "./node.js"
 import { Main } from "./main.js"
 
-export class Dijkstra{
+export class Astar{
     main;
     unVisitedNodes = [];
     visitedNodes = [];
@@ -26,11 +26,10 @@ export class Dijkstra{
     }
 
     getShrotestDistanceNode(){
-
         let shortestDistanceNode = this.unVisitedNodes[0]
         
         for(let i = 0; i<this.unVisitedNodes.length; i++){
-            if(this.unVisitedNodes[i].shortestDistance <= shortestDistanceNode.shortestDistance){
+            if((this.unVisitedNodes[i].shortestDistance + this.potential(this.unVisitedNodes[i].node)) <= shortestDistanceNode.shortestDistance + this.potential(shortestDistanceNode.node)){
                 shortestDistanceNode = this.unVisitedNodes[i]
             }
         }
@@ -52,6 +51,15 @@ export class Dijkstra{
         
     }
 
+    potential(node){
+        let x = node.x
+        let y = node.y
+        let x2 = this.main.endNode.x
+        let y2 = this.main.endNode.y
+        return Math.sqrt(((x-x2)**2) + ((y-y2)**2))
+    }
+
+
     async start(delay = 120){
         this.unVisitedNodes = []
         this.visitedNodes = []
@@ -68,6 +76,7 @@ export class Dijkstra{
         let visitedEnd = false
         while (!visitedEnd){
             let currentNode = this.getShrotestDistanceNode()
+            
             this.setToVisited(currentNode.node.id)
             if(delay!=0){
                 currentNode.node.setProgress()

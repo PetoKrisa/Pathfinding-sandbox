@@ -1,8 +1,12 @@
 import { Dijkstra } from "./Dijkstra.js";
 import { Main } from "./main.js"
+import { Astar } from "./Astar.js";
+import { Node } from "./node.js";
+import { Path } from "./Path.js";
 
 const main = new Main("canvas")
 const pathfindig = new Dijkstra(main)
+const pathfindig2 = new Astar(main)
 
 function UpdateEditNodeInputs(){
     if(main.highlightedNode == null){
@@ -116,6 +120,7 @@ btnDeleteNode.onclick = (e)=>{
     main.deleteNode(main.highlightedNode.id)
     UpdateEditNodeInputs()
     main.generateNodeList("nodeList")
+    main.generatePathList("pathList")
 }
 
 inputNodeX2.oninput = (e)=>{
@@ -198,17 +203,37 @@ btnAddPath.addEventListener('click', (e)=>{
 
 //canvas drag/drop operations
 function getMousePosition(canvas, event) {
-    let rect = canvas.getBoundingClientRect();
-    let scaleX = canvas.width / rect.width 
-    let scaleY = canvas.height / rect.height;
+    let rect = canvas.canvas.getBoundingClientRect();
+    let scaleX = canvas.canvas.width / rect.width 
+    let scaleY = canvas.canvas.height / rect.height;
     let x = (event.clientX - rect.left)*scaleX;
     let y = (event.clientY - rect.top)*scaleY;
-    return [Math.round(x), Math.round(y)]
+    return [Math.round(parseFloat(x)), Math.round(parseFloat(y))]
 }
 var canvas = document.getElementById("canvas")
 
 canvas.onmouseup = (e)=>{
-    if(main.draggedNode != null){
+    let mousecoords = getMousePosition(main.canvas,e)
+    let closest = main.findClosestNode(mousecoords[0], mousecoords[1])
+    if(main.ghostNode != null && main.addedPath != null){
+        if(main.getDistanceFromNode(mousecoords[0],mousecoords[1],closest) <= 42*main.scale){
+            main.updatePath(main.addedPath.id, closest.id, main.highlightedNode.id)
+            main.generatePathList("pathList")
+            main.generateNodeList("nodeList")
+            main.update()
+            main.addedPath = null
+            main.ghostNode = null
+            main.draggedNode = null
+            main.pathsId++
+        } else{
+            main.deletePath(main.addedPath.id)
+            main.addedPath = null
+            main.ghostNode = null
+            main.draggedNode = null
+            main.update()
+        }
+    }
+    else if(main.draggedNode != null){
         main.update()
         main.draggedNode = null
         UpdateEditNodeInputs()
@@ -219,22 +244,44 @@ canvas.onmouseup = (e)=>{
 }
 
 canvas.onmousedown = (e)=>{
-    let mousecoords = getMousePosition(canvas,e)
+    let mousecoords = getMousePosition(main.canvas,e)
     let closest = main.findClosestNode(mousecoords[0], mousecoords[1])
-    if(main.getDistanceFromNode(mousecoords[0],mousecoords[1],closest) <= 50){
+    if(e.ctrlKey&&main.getDistanceFromNode(mousecoords[0],mousecoords[1],closest) <= 42*main.scale){
+        main.highlightedNode = closest
+        main.draggedNode = null
+        main.ghostNode = new Node(main, -1, mousecoords[0], mousecoords[1])
+        let pathToAdd = new Path(main, main.pathsId, main.highlightedNode, main.ghostNode)
+        main.addedPath = pathToAdd
+        main.pathsList.push(pathToAdd)
+        //main.pathsId++
+    } else if(e.altKey){
+        main.addNode(mousecoords[0], mousecoords[1])
+        main.update()
+        main.generateNodeList("nodeList")
+    }
+    else if(main.getDistanceFromNode(mousecoords[0],mousecoords[1],closest) <= 42*main.scale){
         main.draggedNode = closest
         main.highlightedNode = closest
+        
         UpdateEditNodeInputs()
-
         //main.updateNode(main.draggedNode.id,mousecoords[0],mousecoords[1])
         main.generateNodeList("nodeList")
+        main.generatePathList("pathList")
         main.highlightNode(main.draggedNode.id)
         main.update()
     }
+    
 }
 canvas.onmousemove = (e)=>{
-    let mousecoords = getMousePosition(canvas,e)
-    if(e.buttons==1 && main.draggedNode!=null){
+
+    let mousecoords = getMousePosition(main.canvas,e)
+    if(e.buttons==1 && e.ctrlKey && main.ghostNode !=null && main.addedPath != null){
+        main.ghostNode.x = mousecoords[0]
+        main.ghostNode.y = mousecoords[1]
+        main.update()
+    }
+    else if(e.buttons==1 && main.draggedNode!=null){
+       
         if(e.shiftKey){
             main.updateNode(main.draggedNode.id,Math.round(mousecoords[0]/100)*100,Math.round(mousecoords[1]/100)*100)
             main.drawGrid()
@@ -263,29 +310,46 @@ btnAddBg.onclick = (e)=>{
 }
 
 btnDelBg.onclick = (e)=>{
-    console.log("delbg")
     main.bgBlob = undefined;
     main.bgImageName = undefined;
     main.update()
 }
 
 btnStartPath.onclick = (e)=>{
-    if(inputDelay.value == ""){
-        pathfindig.start()
-    } else{
-        pathfindig.start(inputDelay.value)
-
+    
+    switch(selectAlg.value){
+        case "dijkstra":
+            if(inputDelay.value == ""){pathfindig.start()}
+            else{pathfindig.start(inputDelay.value)}
+            break;
+        case "astar":
+            if(inputDelay.value == ""){pathfindig2.start()}
+            else{pathfindig2.start(inputDelay.value)}
+            break;
     }
+
 }
 
 btnResetPath.onclick = (e)=>{
     main.unSetAllProgress()
 }
 
-document.addEventListener("keyup", (e)=>{
-    if(e.key == "Control"){
+window.addEventListener("keydown", (e)=>{
+
+    if(e.key == "e" && e.ctrlKey){
         e.preventDefault()
+        e.stopImmediatePropagation()
         main.toggleEditMode()
         main.update()
     }
 })
+
+rangeScale.oninput = (e)=>{
+    main.scale = parseFloat(rangeScale.value)
+    main.update()
+}
+
+//import osm map
+OSMimport.onclick = (e)=>{
+    main.saveLoad.loadOsm(OSMnorth.value, OSMwest.value, OSMeast.value, OSMsouth.value)
+}

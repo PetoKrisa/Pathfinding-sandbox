@@ -1,4 +1,4 @@
-import { Path } from "./path.js"
+import { Path } from "./Path.js"
 import { Node } from "./node.js"
 export class SaveLoad{
     main;
@@ -36,6 +36,7 @@ export class SaveLoad{
     async load(fileName){
         let results = await fetch(`/saves/${fileName}.json`)
         let text = await results.text()
+
         this.parseJSON(text)
     }
 
@@ -49,7 +50,9 @@ export class SaveLoad{
             let node = json.nodes[i]
             let nodeToPush = new Node(this.main,node.id, node.x, node.y)
             if(node.isStart){nodeToPush.isStart = true}
-            if(node.isEnd){nodeToPush.isEnd = true}
+            if(node.isEnd){nodeToPush.isEnd = true
+                this.main.endNode = nodeToPush
+            }
             this.main.nodesList.push(nodeToPush)
         }
 
@@ -67,6 +70,57 @@ export class SaveLoad{
         this.main.update()
         this.main.generateNodeList("nodeList")
         this.main.generatePathList("pathList")
+    }
+
+    mapToCanvas(lon,lat, n,w,e,s){
+        let y = (lat-parseFloat(n))/(parseFloat(n)-parseFloat(s))
+        let x = (lon-parseFloat(w))/(parseFloat(w)-parseFloat(e))
+        if((x/-1)*2000<=0){x=0}
+        if((y/-1)*2000<=0){y=0}
+        return [((x/-1)*2000),((y/-1)*2000)]
+    }
+
+    async loadOsm(n,w,e,s){
+        let request = await fetch("https://overpass-api.de/api/interpreter", {
+            method:"post",
+            body: "data=" + encodeURIComponent(`
+                [out:json];
+                (
+                way["highway"~"motorway|trunk|primary|secondary|tertiary|unclassified|residential|service"](${s},${w},${n},${e});
+                );
+                (._;>;);
+                out;
+                `)
+        })
+        let result = await request.text()
+        let json = JSON.parse(result)
+        let nodes = []
+        let ways = []
+        for(let i = 0; i < json["elements"].length; i++){
+            if(json["elements"][i]["type"] == "node"){
+                nodes.push(json["elements"][i])
+            } else if(json["elements"][i]["type"] == "way"){
+                ways.push(json["elements"][i])
+            }
+        }
+        for(let i = 0; i < nodes.length; i++){
+            let coords = this.mapToCanvas(nodes[i].lon, nodes[i].lat, n,w,e,s)
+            let nodeToPush = new Node(this.main, nodes[i].id, coords[0], coords[1])
+            this.main.nodesList.push(nodeToPush)            
+        }
+        for(let i = 0; i< ways.length; i++){
+            for(let x = 0; x < ways[i].nodes.length-1; x++){
+                let node1 = this.main.getNode(ways[i].nodes[x])
+                let node2 = this.main.getNode(ways[i].nodes[x+1])
+                let pathToPush = new Path(this.main, ways[i].id, node1, node2)
+                node1.paths.push(pathToPush)
+                node2.paths.push(pathToPush)
+                this.main.pathsList.push(pathToPush)
+            }
+            
+        }
+
+        this.main.update()
     }
 
     async addBackground(fileName){

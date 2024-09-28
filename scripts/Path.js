@@ -15,11 +15,9 @@ export class Path{
 
     draw(){
         this.main.canvas.lineCap = "round";
-        if(this.main.editMode){
-            this.main.canvas.lineWidth = 20
-        } else{
-            this.main.canvas.lineWidth = 15
-        }
+
+        this.main.canvas.lineWidth = 20*this.main.scale
+
         if (this.isProgress){
             this.main.canvas.strokeStyle = "green"
         } 

@@ -12,10 +12,41 @@
         <canvas id="canvas" width="2000px" height="2000px">
 
         </canvas>
-        <p class="hint">*2000x2000</p>
-        <p class="hint">Shift to snap to grid</p>
-        <p class="hint">Control to toggle edit mode</p>
+        <div style="max-width: max-content;">
+            <div style="display: inline-block;">
+                <p class="hint">Shift to snap to grid (2000x2000)</p>
+                <p class="hint">Ctrl+e to toggle edit mode</p>
+                <p class="hint">Alt+Click to add Node</p>
+                <p class="hint">Ctrl+Drag to add path</p>
+            </div>
+            <div style="display: inline-block; vertical-align: top;">
+                <label class="hint" for="Scale">0.2x</label>
+                <input type="range" name="Scale" id="rangeScale" value="1" min="0.2" max="2" step="0.1">
+                <label class="hint" for="Scale">2x</label>    
+            </div>
+            <div style="display: inline-block; vertical-align: top;">
+                <input type="button" value="Import OSM map" style="width: 140px;" onclick="OSMdialog.showModal()">
+            </div>
+            <dialog id="OSMdialog">
+                <input type="text" id="OSMnorth" name="OSMnorth" placeholder="North" value="47.54305">
+                <br>
+                <input type="text" id="OSMwest" name="OSMwest" placeholder="West" value="19.02720"> 
+                <input type="text" id="OSMeast" name="OSMeast" placeholder="East" value="19.08454">
+                <br>
+                <input type="text" id="OSMsouth" name="OSMsouth" placeholder="South" value="47.50433">
+                <br>
+                <p class="hint">Go to <a href="https://www.openstreetmap.org/export" target="_blank">OpenStreetMap</a>, and press "manually select a different area", then select a bounding box, and copy and paste the coordinates here</p>
+                <p class="hint">Keep the bounding box as square as possibe, because the app will strech it into a square</p>
+                <br>
+                <br>
+                <p class="hint" style="">&copy;<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors</p>
+                <input type="button" value="Import" id="OSMimport">
+                <input type="button" value="Close" onclick="OSMdialog.close()">
+            </dialog>
         </div>
+        
+        
+    </div>
         <div class="flex-col">
             <div id="nodes">
                 <input type="button" value="Add" id="btnAddNode">
@@ -62,6 +93,10 @@
                 <input type="button" value="Start" id="btnStartPath" name="btnStartPath">
                 <input type="button" value="Reset" id="btnResetPath" name="btnResetPath">
                 <input type="text" placeholder="Delay (ms)" id="inputDelay" value="">
+                <select name="selectAlg" id="selectAlg">
+                    <option value="dijkstra">Dijkstra</option>
+                    <option value="astar">A*</option>
+                </select>
                 <p class="hint">Delay will slow down the pathfinding visualiser. 0=instant, default=120</p>
 
             </div>

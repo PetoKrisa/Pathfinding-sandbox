@@ -1,6 +1,6 @@
-import { Path } from "./path.js"
 import { Node } from "./node.js"
 import { SaveLoad } from "./SaveLoad.js";
+import { Path } from "./Path.js";
 export class Main{
     canvas;
     saveLoad;
@@ -16,6 +16,12 @@ export class Main{
     bgImageName;
     bgBlob;
     editMode = true
+    endNode = null;
+    startNode = null;
+    scale = 1;
+
+    ghostNode = null;
+    addedPath = null;
 
     highlightedNode;
     highlightedPath;
@@ -69,7 +75,7 @@ export class Main{
             this.canvas.lineTo(i*100, 2000)
             this.canvas.stroke()
         }
-        for(let i = 0; i < 20; i++){
+        for(let i = 1; i < 21; i++){
             this.canvas.strokeStyle = "gray"
             if(i==10){
                 continue
@@ -236,23 +242,34 @@ export class Main{
         }
     }
 
-    updatePath(id, n1, n2){
+    updatePath(id, node1Id, node2Id){
         try{
+            let node1 = this.getNode(node1Id)
+            let node2 = this.getNode(node2Id)
+            if(node1==null || node2 == null){
+                throw new ReferenceError("Node1 or Node2 does not exist")
+            }
+            else if(node1==node2){
+                this.deletePath(id)
+                throw new TypeError("Node1 and Node2 can not be the same")
+            }
             for(let i = 0; i < this.pathsList.length; i++){
                 if(this.pathsList[i].id == id){
-                    if(this.getNode(n1) == null || this.getNode(n2) == null){
-                        
-                        break
-                    }
                     
+
                     let currentPath = this.pathsList[i]
+                    currentPath.node1 = node1
+                    currentPath.node2 = node2
+                    if(node1.isPathExist(currentPath) || node2.isPathExist(currentPath)){
+                        this.deletePath(currentPath.id)
+                        throw new ReferenceError("Path aleready exists!")
+                    }
 
                     currentPath.node1.deletePathFromList(currentPath)
                     currentPath.node2.deletePathFromList(currentPath)
 
-
-                    let newNode1 = this.getNode(n1);
-                    let newNode2 = this.getNode(n2);
+                    let newNode1 = node1;
+                    let newNode2 = node2;
                     newNode1.addPathToList(currentPath)
                     newNode2.addPathToList(currentPath)
 
@@ -334,6 +351,7 @@ export class Main{
         for(let i = 0; i<this.nodesList.length;i++){
             this.nodesList[i].unSetStart()
         }
+        this.startNode = null
         this.update()
 
     }
@@ -344,6 +362,7 @@ export class Main{
         if(node.isEnd){
             node.unSetEnd()
         }
+        this.startNode = node
         node.setStart()
         this.update()
     }
@@ -352,6 +371,7 @@ export class Main{
         for(let i = 0; i<this.nodesList.length;i++){
             this.nodesList[i].unSetEnd()
         }
+        this.endNode = null;
         this.update()
 
     }
@@ -361,6 +381,7 @@ export class Main{
         if(node.isStart){
             node.unSetStart()
         }
+        this.endNode = node;
         node.setEnd()
         this.update()
     }

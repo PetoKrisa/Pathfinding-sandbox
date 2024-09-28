@@ -1,6 +1,7 @@
 # Pathfinding Sandbox Documentation
 ## 1. Summary
-In this app you can add, and edit nodes *(verticies)* and paths *(edges)* of a weighted graph. The weights are the actual length of the paths in pixels. You can save and load graphs, add a starting *(fixed vertex)* and an ending point. With a specified starting and ending point you can start the [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm) visualiser.
+In this app you can add, and edit nodes *(verticies)* and paths *(edges)* of a weighted graph. The weights are the actual length of the paths in pixels. You can save and load graphs, add a starting *(fixed vertex)* and an ending point. With a specified starting and ending point you can start the [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm) or the [A* algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm) visualiser.
+You can even import real world maps from [OpenStreetMap](https://www.openstreetmap.org)
 I made it using only vanilla JS and HTML canvas.
 
 ## 2. How to run
@@ -22,13 +23,28 @@ Since this app uses js-modules, and fetch requests, you need a generic http or p
 
 ## 3. User Interface
 ### 3.1 Canvas
+#### 3.1.1 Canvas controls
 - a 2000px by 2000px html canvas
 	- Coordinates start from the top left, not the middle
 - Displays all the **nodes** and **paths**
 - You select nodes by clicking on them
 - Clicking and dragging will move the nodes with th cursor
 - Holding `Shift` while dragging will draw a 20x20 grid and snap dragged nodes to it
-- Pressing `Control` will toggle edit mode, which means that it will hide the nodes, so it is easier to see short paths
+- Pressing `Control+e` will toggle edit mode, which means that it will hide the nodes, so it is easier to see short paths
+- Holding `Contol` while clicking and dragging a node will allow you to connect nodes together with you mouse
+- Holding `Alt` while clicking on the canvas will place a node at your cursor
+- There is a range slider below the canvas, which sets the scale of nodes and paths, which allows you to see better
+- And finally there is a button labelled `Import OSM map` which opens an import dialoge
+#### 3.1.1 How to import an OSM map
+1. Click the `Import OSM map` button
+2. Go to [OpenStreetMap](https://www.openstreetmap.org/export)
+3. Press `Manually select a different area`
+4. Using the bounding box on the screen select a square shaped area
+	- **Keep it as square as possible**, because when mapping the coordinates to the canvas the app will stretch it to fit in a square, causing distorsions
+5. Copy the coordinates from the top left of the screen from OpenStreetMap to the corresponging inputs in the Pathfinding Sandbox app
+	- The **North**, **West**, **East**, **South** inputs are arranged the same way as in OpenStreetMap
+	- The default values will load the city center of **Budapest**, which is a large area with many nodes, pull the scale slider to 0.2x and toggle `edit mode` with `ctrl+e` before loading, and keep in mind that it might take 10+ secounds depending on performance
+6. Click Import
 ### 3.2 Nodes tab (1st tab)
 #### 3.2.1 Controls
 - You can `Add` a node with specified **x** and **y** coordinates
@@ -69,7 +85,7 @@ Save file model:
 "nodesId": 0,
 "pathsId": 0,
 "nodes": [ {"id": 0,"x": 0,"y": 0, "paths": [0, ...], "isStart": false, "isEnd": false}, ... ]
-"paths": [ {"id", "node1", 0, "node2": 1}, ... ]
+"paths": [ {"id": 0, "node1": 0, "node2": 1}, ... ]
 ```
 - `nodesId` and `PathsId` are stored to the app knows what id to give the next added node and path
 	- it is incremented every time
@@ -87,11 +103,23 @@ Save file model:
 - The `Delay (ms)` input sets the animation speed (the time it sleeps between iterations)
 	- the default value is 120
 	- if the value is 0 the algorithm is not animated, and only highlights the shortest path instantly
+- With the select element you can change the algorithm to use
+	- Options: Dijkstra, A*
 
 ## 4. External sources
+All materials from OpenStreetMap belong to the [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors
+
 1. Canvas functions: [W3Schools canvas reference](https://www.w3schools.com/tags/ref_canvas.asp)
 2. General javascript problems: [MDN Web Docs](https://developer.mozilla.org/en-US/)
 3. Dijkstras Algorithm:
 	- Youtube 1: [Dijkstras Shortest Path Algorithm Explained | With Example | Graph Theory](https://www.youtube.com/watch?v=bZkzH5x0SKU&t=197s)
 	- Youtube 2: [How Dijkstra's Algorithm Works](https://www.youtube.com/watch?v=EFg3u_E6eHU)
 	- Article: [Dijkstra's Algorithm – Explained with a Pseudocode Example](https://www.freecodecamp.org/news/dijkstras-algorithm-explained-with-a-pseudocode-example/)
+4. A* Algorithm:
+	- Youtube: [The hidden beauty of the A* algorithm](https://www.youtube.com/watch?v=A60q6dcoCjw)
+5. Pictures included:
+	- Budapest [OpenStreetMap](https://www.openstreetmap.org/#map=12/47.5242/19.0805)
+	- Gta V [Map Genie](https://gta-5-map.com/)
+6. Map import:
+	- Map: [OpenStreetMap](https://www.openstreetmap.org/)
+	- Api [Overpass Api](https://overpass-api.de/)

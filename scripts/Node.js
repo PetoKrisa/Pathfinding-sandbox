@@ -9,7 +9,6 @@ export class Node{
     isEnd = false
     isProgress = false
 
-
     constructor(main,id,x,y){
         this.main = main
         this.id = id
@@ -38,7 +37,7 @@ export class Node{
 
         }
         this.main.canvas.beginPath()
-        this.main.canvas.arc(this.x, this.y, 32, 0, 2 * Math.PI)
+        this.main.canvas.arc(this.x, this.y, 32*this.main.scale, 0, 2 * Math.PI)
         this.main.canvas.fill()
         
         this.main.canvas.fillStyle = "black"
@@ -46,9 +45,9 @@ export class Node{
             this.main.canvas.fillStyle = "white"
         }
 
-        let fontSize = 45
-        this.main.canvas.font = `${45}px monospace`
-        let offset = fontSize/3.5
+        let fontSize = 45*this.main.scale
+        this.main.canvas.font = `${fontSize}px monospace`
+        let offset = (fontSize/(3.5/this.main.scale))/this.main.scale
         let textx = this.x - (offset + (offset * (String(this.id).length-1)))
         let texty = this.y + (offset)
         this.main.canvas.fillText(this.id, textx, texty)
@@ -85,8 +84,8 @@ export class Node{
 
     isPathExist(path){
         for(let i = 0; i < this.paths.length; i++){
-            if((this.paths[i].node1 == path.node1 && this.paths[i].node2 == path.node2)
-            || (this.paths[i].node2 == path.node1 && this.paths[i].node1 == path.node2)){
+            if((this.paths[i].node1.id == path.node1.id && this.paths[i].node2.id == path.node2.id)
+            || (this.paths[i].node2.id == path.node1.id && this.paths[i].node1.id == path.node2.id)){
                 return true
             }
         } 
