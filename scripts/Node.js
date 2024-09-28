@@ -23,7 +23,7 @@ export class Node{
             this.main.canvas.fillStyle = "yellow"
         }
         else if (this.isProgress){
-            this.main.canvas.fillStyle = "green"
+            this.main.canvas.fillStyle = "red"
         } 
         else if (this.isStart){
             this.main.canvas.fillStyle = "green"

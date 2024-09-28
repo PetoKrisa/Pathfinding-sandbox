@@ -19,7 +19,7 @@ export class Path{
         this.main.canvas.lineWidth = 20*this.main.scale
 
         if (this.isProgress){
-            this.main.canvas.strokeStyle = "green"
+            this.main.canvas.strokeStyle = "red"
         } 
         else if(this.isHighlighted){
             this.main.canvas.strokeStyle = "yellow"
