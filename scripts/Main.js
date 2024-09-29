@@ -9,7 +9,7 @@ export class Main{
         this.saveLoad = new SaveLoad(this)
     }
     
-    nodesList = []
+    nodesList = new Map()
     pathsList = []
     nodesId = 0;
     pathsId = 0;
@@ -32,8 +32,7 @@ export class Main{
         this.editMode = !this.editMode
     }
 
-    update(){
-        
+    update(){ 
         this.draw()
     }
 
@@ -48,16 +47,9 @@ export class Main{
         for(let i = 0; i < this.pathsList.length; i++){
             this.pathsList[i].draw()
         }
-        if(!this.editMode){
-            for(let i = 0; i < this.pathsList.length; i++){
-                if(this.pathsList[i].isProgress){
-                    this.pathsList[i].draw()
-                }
-            }
-        }
         
-        for(let i = 0; i < this.nodesList.length; i++){
-            this.nodesList[i].draw()
+        for(let [k,v] of this.nodesList){
+            v.draw()
         }
         
     }
@@ -108,16 +100,13 @@ export class Main{
     }
 
     findClosestNode(x,y){
-        let lowestDistanceNode = this.nodesList[0]
+        let lowestDistanceNode = this.nodesList.entries().next().value
         let lowestDistance = null
-        for(let i = 0; i < this.nodesList.length; i++){
-            let currentNode = this.nodesList[i]
-            let distance = this.getDistanceFromNode(x,y,this.nodesList[i])
-            if(lowestDistance==null){
-                lowestDistanceNode = this.nodesList[i]
-                lowestDistance = distance
-            } else if(lowestDistance>distance){
-                lowestDistanceNode = this.nodesList[i]
+        for(let [k,v] of this.nodesList){
+            let currentNode = v
+            let distance = this.getDistanceFromNode(x,y,v)
+            if(lowestDistance==null || lowestDistance>distance){
+                lowestDistanceNode = v
                 lowestDistance = distance
             }
         }
@@ -128,7 +117,7 @@ export class Main{
         if(x=="") {x=0}
         if(y=="") {y=0}
         if(x!=undefined && y!=undefined){
-            this.nodesList.push(new Node(this, this.nodesId, x,y))
+            this.nodesList.set(this.nodesId,new Node(this, this.nodesId, x,y))
         this.nodesId++;
         } else{
             throw TypeError("X and Y cannot be undefined")
@@ -140,11 +129,7 @@ export class Main{
     getNode(id){
         try{
         let node = null;
-        node = this.nodesList.find((e)=>{
-            if(e.id == id){
-            return e;
-            }
-        })
+        node = this.nodesList.get(parseInt(id))
         return node;
         }
         catch(err){
@@ -154,7 +139,7 @@ export class Main{
 
     updateNode(id, x, y){
         try{
-            let nodeToUpdate = this.getNode(id)
+            let nodeToUpdate = this.nodesList.get(parseInt(id))
             nodeToUpdate.x = x
             nodeToUpdate.y = y
             this.update()
@@ -166,23 +151,13 @@ export class Main{
 
     deleteNode(id){
         try{
-
-            for(let i = 0; i < this.nodesList.length; i++){
-                if(this.nodesList[i].id == id){
-                    let pathLength = this.nodesList[i].paths.length
-                    let pathsListToDelete = [...this.nodesList[i].paths]
-                    for(let x = 0; x<pathLength; x++){
-                        this.deletePath(pathsListToDelete[x].id)
-                    }
-                    this.nodesList.splice(i,1)
-                    this.highlightedNode = null;
-                    break
-                }
+            let nodeToDelete = this.nodesList.get(parseInt(id))
+            for(let e of nodeToDelete.paths){
+                this.deletePath(e.id)
             }
+            this.nodesList.delete(parseInt(id))
 
-
-
-            if(this.nodesList.length==0){
+            if(this.nodesList.size==0){
                 this.highlightedNode = null;
             }
             this.update()
@@ -312,9 +287,8 @@ export class Main{
 
     generateNodeList(elementId){
         let nodeListHtml = ""
-        for(let i = 0; i<this.nodesList.length; i++){
-            let node = this.nodesList[i]
-            nodeListHtml+= `<p data-id="${node.id}" class="list-item node-list-item" onclick="this.focus()" tabindex="1">${node.id} (${node.x};${node.y}) - ${node.paths.length} deg</p>`
+        for(let [k,v] of this.nodesList){
+            nodeListHtml+= `<p data-id="${v.id}" class="list-item node-list-item" onclick="this.focus()" tabindex="1">${v.id} (${v.x};${v.y}) - ${v.paths.length} deg</p>`
         }
         document.getElementById(elementId).innerHTML = nodeListHtml
     }
@@ -329,12 +303,8 @@ export class Main{
     }
 
     highlightNode(id){
-        for(let i = 0; i < this.nodesList.length; i++){
-            if(this.nodesList[i].id == id){
-                this.nodesList[i].isHighlighted = true
-                break
-            }
-        }
+        let nodeToHighlight = this.nodesList.get(parseInt(id))
+        nodeToHighlight.isHighlighted = true
     }
 
     highlightPath(id){
@@ -388,8 +358,8 @@ export class Main{
     }
 
     unSetAllProgress(){
-        for(let i = 0; i<this.nodesList.length;i++){
-            this.nodesList[i].unSetProgress()
+        for(let [k,v] of this.nodesList){
+            v.unSetProgress()
         }
         for(let i = 0; i<this.pathsList.length;i++){
             this.pathsList[i].unSetProgress()

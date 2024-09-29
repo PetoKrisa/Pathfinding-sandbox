@@ -21,7 +21,7 @@ export class SaveLoad{
     generateJSON(fileName){
         let json = {bgImageName: this.main.bgImageName, nodesId: this.main.nodesId, pathsId: this.main.pathsId, nodes:[], paths:[]}
         for(let i = 0; i < this.main.nodesList.length; i++){
-            json.nodes.push(this.main.nodesList[i].toJSON())
+            json.nodes.push(this.main.nodesList.get(i).toJSON())
         }
         for(let i = 0; i < this.main.pathsList.length; i++){
             json.paths.push(this.main.pathsList[i].toJSON())
@@ -53,7 +53,7 @@ export class SaveLoad{
             if(node.isEnd){nodeToPush.isEnd = true
                 this.main.endNode = nodeToPush
             }
-            this.main.nodesList.push(nodeToPush)
+            this.main.nodesList.set(nodeToPush.id,nodeToPush)
         }
 
         for(let i = 0; i < json.paths.length; i++){
@@ -106,7 +106,7 @@ export class SaveLoad{
         for(let i = 0; i < nodes.length; i++){
             let coords = this.mapToCanvas(nodes[i].lon, nodes[i].lat, n,w,e,s)
             let nodeToPush = new Node(this.main, nodes[i].id, coords[0], coords[1])
-            this.main.nodesList.push(nodeToPush)            
+            this.main.nodesList.set(nodeToPush.id,nodeToPush)            
         }
         for(let i = 0; i< ways.length; i++){
             for(let x = 0; x < ways[i].nodes.length-1; x++){
@@ -119,7 +119,8 @@ export class SaveLoad{
             }
             
         }
-
+        this.main.generateNodeList("nodeList")
+        this.main.generatePathList("pathList")
         this.main.update()
     }
 

@@ -71,8 +71,6 @@ export class Dijkstra{
                 currentNode.node.draw()
                 await this.timeout(delay)
             }
-            
-
 
             for(let i = 0; i < currentNode.node.paths.length; i++){
                 if(delay!=0){
