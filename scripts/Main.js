@@ -139,14 +139,13 @@ export class Main{
 
     getNode(id){
         try{
-        let node
-        for(let i = 0; i < this.nodesList.length; i++){
-            if(this.nodesList[i].id == id){
-                node = this.nodesList[i]
-                return node;
+        let node = null;
+        node = this.nodesList.find((e)=>{
+            if(e.id == id){
+            return e;
             }
-        }
-        return null;
+        })
+        return node;
         }
         catch(err){
             alert(err)
@@ -348,42 +347,44 @@ export class Main{
     }
 
     unSetStartNodes(){
-        for(let i = 0; i<this.nodesList.length;i++){
-            this.nodesList[i].unSetStart()
+        if(this.startNode != null){
+            this.startNode.isStart = false;
+            this.startNode.draw()
+            this.startNode = null
+
         }
-        this.startNode = null
-        this.update()
 
     }
 
-    setStartNode(id){
-        let node = this.getNode(id)
+    setStartNodeToHighlight(){
+        let node = this.highlightedNode
         this.unSetStartNodes()
         if(node.isEnd){
             node.unSetEnd()
         }
         this.startNode = node
         node.setStart()
-        this.update()
+        node.draw()
     }
 
     unSetEndNodes(){
-        for(let i = 0; i<this.nodesList.length;i++){
-            this.nodesList[i].unSetEnd()
+        if(this.endNode != null){
+            this.endNode.isEnd = false
+            this.endNode.draw()
+            this.endNode = null;
         }
-        this.endNode = null;
-        this.update()
+        
 
     }
-    setEndNode(id){
-        let node = this.getNode(id)
+    setEndNodeToHighlighted(){
+        let node = this.highlightedNode
         this.unSetEndNodes()
         if(node.isStart){
             node.unSetStart()
         }
         this.endNode = node;
         node.setEnd()
-        this.update()
+        node.draw()
     }
 
     unSetAllProgress(){
@@ -411,12 +412,8 @@ export class Main{
     isThereStartAndEnd(){
         let start = false
         let end = false
-        for(let i = 0; i<this.nodesList.length;i++){
-            if(this.nodesList[i].isStart){ start = true}
-        }
-        for(let i = 0; i<this.nodesList.length;i++){
-            if(this.nodesList[i].isEnd){ end = true}
-        }
+        if(this.startNode!=null){start=true}
+        if(this.endNode!= null){end=true}
         if(start&&end){return true}
         else{return false}
     }

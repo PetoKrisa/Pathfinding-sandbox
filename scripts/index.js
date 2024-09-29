@@ -1,5 +1,5 @@
 import { Dijkstra } from "./Dijkstra.js";
-import { Main } from "./main.js"
+import { Main } from "./Main.js"
 import { Astar } from "./Astar.js";
 import { Node } from "./node.js";
 import { Path } from "./Path.js";
@@ -136,7 +136,7 @@ inputNodeY2.oninput = (e)=>{
 
 btnStart.oninput = (e)=>{
     if(btnStart.checked){
-        main.setStartNode(main.highlightedNode.id)
+        main.setStartNodeToHighlight()
     } else{
         main.unSetStartNodes()
     }
@@ -144,7 +144,7 @@ btnStart.oninput = (e)=>{
 }
 btnEnd.oninput = (e)=>{
     if(btnEnd.checked){
-        main.setEndNode(main.highlightedNode.id)
+        main.setEndNodeToHighlighted()
     } else{
         main.unSetEndNodes()
     }
@@ -197,8 +197,6 @@ btnAddPath.addEventListener('click', (e)=>{
     main.addPath(inputPathNode1.value, inputPathNode2.value)
     main.generatePathList("pathList")
     main.generateNodeList("nodeList")
-
-
 })
 
 //canvas drag/drop operations
@@ -237,7 +235,6 @@ canvas.onmouseup = (e)=>{
         main.update()
         main.draggedNode = null
         UpdateEditNodeInputs()
-
         main.update()
 
     }

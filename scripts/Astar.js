@@ -1,5 +1,5 @@
 import { Node } from "./node.js"
-import { Main } from "./main.js"
+import { Main } from "./Main.js"
 
 export class Astar{
     main;
@@ -48,7 +48,6 @@ export class Astar{
         let temp = this.unVisitedNodes[nodeIndex]
         this.visitedNodes.push(temp)
         this.unVisitedNodes.splice(nodeIndex, 1)
-        
     }
 
     potential(node){
@@ -65,56 +64,62 @@ export class Astar{
         this.visitedNodes = []
         this.main.unSetAllProgress()
         if(!this.main.isThereStartAndEnd()){throw Error("No starting or ending node set!"); return;}
-
-        for(let i = 0; i < this.main.nodesList.length; i++){
-            let nodeToPush = {node: this.main.nodesList[i], shortestDistance: Infinity, prevId: null}
-            if(nodeToPush.node.isStart){nodeToPush.shortestDistance = 0}
-            this.unVisitedNodes.push(nodeToPush)
-        }
-
+        
+        let nodeToPush = {node: this.main.startNode, shortestDistance: 0, prevId: null}
+        this.unVisitedNodes.push(nodeToPush)
 
         let visitedEnd = false
         while (!visitedEnd){
+
             let currentNode = this.getShrotestDistanceNode()
-            
             this.setToVisited(currentNode.node.id)
             if(delay!=0){
                 currentNode.node.setProgress()
-                this.main.update()
+                currentNode.node.draw()
+                await this.timeout(delay)
             }
             
-            await this.timeout(delay)
 
 
             for(let i = 0; i < currentNode.node.paths.length; i++){
                 if(delay!=0){
                     currentNode.node.paths[i].setProgress()
-                    this.main.update()
+                    currentNode.node.paths[i].draw()
+                    currentNode.node.draw()
                 }
 
                 let curDistance = currentNode.shortestDistance + currentNode.node.paths[i].getLength()
+                let nextNodeToPush = currentNode.node.paths[i].getNextNode(currentNode.node)
+                let unVisitedNodeToPush = {node: nextNodeToPush, shortestDistance: Infinity, prevId: null}
+                this.unVisitedNodes.push(unVisitedNodeToPush)
                 let nextNode = this.unVisitedNodes.find((e)=>{
                     if(e.node.id == currentNode.node.paths[i].getNextNode(currentNode.node).id){                        
                         return e
                     }
                 })
+                
                 if(nextNode!=undefined){
-                    if(curDistance<nextNode.shortestDistance){
+                    if(curDistance<nextNode.shortestDistance && !this.isVisited(nextNode.node.id)){
                         nextNode.shortestDistance = curDistance
                         nextNode.prevId = currentNode.node.id
+                        this
                     }
     
                     if(nextNode.node.isEnd){
                         visitedEnd = true
                         this.setToVisited(nextNode.node.id)
                     }
-                    await this.timeout(delay)
+                    if(delay!=0){
+                        currentNode.node.draw()
+                        nextNode.node.draw()
+                        await this.timeout(delay)
+                    }
+                    
                 }
 
             }
         }
         this.DrawBestPath()
-
     }
 
     DrawBestPath(){
@@ -128,10 +133,13 @@ export class Astar{
             
             if(currentNode.node.isStart){
                 returnedToStart = true
+                currentNode.node.draw()
             } else{
                 for(let i = 0; i < currentNode.node.paths.length; i++){
                     if((currentNode.node.paths[i].node1.id == nextNode.node.id) || (currentNode.node.paths[i].node2.id == nextNode.node.id)){
                         currentNode.node.paths[i].setProgress()
+                        currentNode.node.paths[i].draw()
+                        currentNode.node.draw()
                         break
                     }
                 }
@@ -139,6 +147,5 @@ export class Astar{
             currentNode = nextNode
         }
 
-        this.main.update()
     }
 }
