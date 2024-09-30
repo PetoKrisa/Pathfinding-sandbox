@@ -20,11 +20,11 @@ export class SaveLoad{
 
     generateJSON(fileName){
         let json = {bgImageName: this.main.bgImageName, nodesId: this.main.nodesId, pathsId: this.main.pathsId, nodes:[], paths:[]}
-        for(let i = 0; i < this.main.nodesList.length; i++){
-            json.nodes.push(this.main.nodesList.get(i).toJSON())
+        for(let [k,v] of this.main.nodesList){
+            json.nodes.push(v.toJSON())
         }
-        for(let i = 0; i < this.main.pathsList.length; i++){
-            json.paths.push(this.main.pathsList[i].toJSON())
+        for(let [k,v] of this.main.pathsList){
+            json.paths.push(v.toJSON())
         }
         if(fileName == ""){
             fileName = "pathJSON"
@@ -48,12 +48,12 @@ export class SaveLoad{
 
         for(let i = 0; i < json.nodes.length; i++){
             let node = json.nodes[i]
-            let nodeToPush = new Node(this.main,node.id, node.x, node.y)
+            let nodeToPush = new Node(this.main,parseInt(node.id), node.x, node.y)
             if(node.isStart){nodeToPush.isStart = true}
             if(node.isEnd){nodeToPush.isEnd = true
                 this.main.endNode = nodeToPush
             }
-            this.main.nodesList.set(nodeToPush.id,nodeToPush)
+            this.main.nodesList.set(parseInt(nodeToPush.id),nodeToPush)
         }
 
         for(let i = 0; i < json.paths.length; i++){
@@ -61,10 +61,9 @@ export class SaveLoad{
             let node1 = this.main.getNode(path.node1)
             let node2 = this.main.getNode(path.node2)
             let pathToPush = new Path(this.main, path.id, node1, node2)
-            this.main.pathsList.push(pathToPush)
+            this.main.pathsList.set(parseInt(pathToPush.id), pathToPush)
             node1.addPathToList(this.main.getPath(path.id))
             node2.addPathToList(this.main.getPath(path.id))
-
         }
 
         this.main.update()
@@ -105,18 +104,20 @@ export class SaveLoad{
         }
         for(let i = 0; i < nodes.length; i++){
             let coords = this.mapToCanvas(nodes[i].lon, nodes[i].lat, n,w,e,s)
-            let nodeToPush = new Node(this.main, nodes[i].id, coords[0], coords[1])
-            this.main.nodesList.set(nodeToPush.id,nodeToPush)            
+            let nodeToPush = new Node(this.main, parseInt(nodes[i].id), coords[0], coords[1])
+            this.main.nodesList.set(parseInt(nodeToPush.id),nodeToPush)            
         }
-        for(let i = 0; i< ways.length; i++){
-            for(let x = 0; x < ways[i].nodes.length-1; x++){
-                let node1 = this.main.getNode(ways[i].nodes[x])
-                let node2 = this.main.getNode(ways[i].nodes[x+1])
-                let pathToPush = new Path(this.main, ways[i].id, node1, node2)
+        for(let way of ways){
+            for(let i = 0; i < way.nodes.length-1; i++){
+                let node1 = this.main.getNode(way.nodes[i])
+                let node2 = this.main.getNode(way.nodes[i+1])
+                let newId = `${way.id}${i}`
+                let pathToPush = new Path(this.main, parseInt(newId), node1, node2)
                 node1.paths.push(pathToPush)
                 node2.paths.push(pathToPush)
-                this.main.pathsList.push(pathToPush)
+                this.main.pathsList.set(pathToPush.id, pathToPush)
             }
+            
             
         }
         this.main.generateNodeList("nodeList")

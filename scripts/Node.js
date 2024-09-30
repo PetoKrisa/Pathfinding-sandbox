@@ -34,7 +34,6 @@ export class Node{
         
         else{
             this.main.canvas.fillStyle = "white"
-
         }
         this.main.canvas.beginPath()
         this.main.canvas.arc(this.x, this.y, 32*this.main.scale, 0, 2 * Math.PI)

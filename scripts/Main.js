@@ -10,7 +10,7 @@ export class Main{
     }
     
     nodesList = new Map()
-    pathsList = []
+    pathsList = new Map()
     nodesId = 0;
     pathsId = 0;
     bgImageName;
@@ -44,8 +44,8 @@ export class Main{
             this.canvas.globalAlpha = 1
 
         }
-        for(let i = 0; i < this.pathsList.length; i++){
-            this.pathsList[i].draw()
+        for(let [k,v] of this.pathsList){
+            v.draw()
         }
         
         for(let [k,v] of this.nodesList){
@@ -103,7 +103,6 @@ export class Main{
         let lowestDistanceNode = this.nodesList.entries().next().value
         let lowestDistance = null
         for(let [k,v] of this.nodesList){
-            let currentNode = v
             let distance = this.getDistanceFromNode(x,y,v)
             if(lowestDistance==null || lowestDistance>distance){
                 lowestDistanceNode = v
@@ -117,7 +116,7 @@ export class Main{
         if(x=="") {x=0}
         if(y=="") {y=0}
         if(x!=undefined && y!=undefined){
-            this.nodesList.set(this.nodesId,new Node(this, this.nodesId, x,y))
+            this.nodesList.set(parseInt(this.nodesId),new Node(this, this.nodesId, x,y))
         this.nodesId++;
         } else{
             throw TypeError("X and Y cannot be undefined")
@@ -137,9 +136,9 @@ export class Main{
         }
     }
 
-    updateNode(id, x, y){
+    updateNode(node, x, y){
         try{
-            let nodeToUpdate = this.nodesList.get(parseInt(id))
+            let nodeToUpdate = node
             nodeToUpdate.x = x
             nodeToUpdate.y = y
             this.update()
@@ -185,9 +184,7 @@ export class Main{
             if(node1.isPathExist(pathToPush) || node2.isPathExist(pathToPush)){
                 throw new ReferenceError("Path already exists")
             } 
-
-
-            this.pathsList.push(pathToPush)
+            this.pathsList.set(parseInt(pathToPush.id), pathToPush)
             this.pathsId++;
             node1.addPathToList(pathToPush)
             node2.addPathToList(pathToPush)
@@ -202,14 +199,9 @@ export class Main{
 
     getPath(id){
         try{
-        let path
-        for(let i = 0; i < this.pathsList.length; i++){
-            if(this.pathsList[i].id == id){
-                path = this.pathsList[i]
-                return path;
-            }
-        }
-        return null;
+        let path = null
+        path = this.pathsList.get(parseInt(id))
+        return path;
         }
         catch(err){
             alert(err)
@@ -227,32 +219,27 @@ export class Main{
                 this.deletePath(id)
                 throw new TypeError("Node1 and Node2 can not be the same")
             }
-            for(let i = 0; i < this.pathsList.length; i++){
-                if(this.pathsList[i].id == id){
+            let pathToUpdate = this.pathsList.get(parseInt(id))
                     
 
-                    let currentPath = this.pathsList[i]
-                    currentPath.node1 = node1
-                    currentPath.node2 = node2
-                    if(node1.isPathExist(currentPath) || node2.isPathExist(currentPath)){
-                        this.deletePath(currentPath.id)
-                        throw new ReferenceError("Path aleready exists!")
-                    }
-
-                    currentPath.node1.deletePathFromList(currentPath)
-                    currentPath.node2.deletePathFromList(currentPath)
-
-                    let newNode1 = node1;
-                    let newNode2 = node2;
-                    newNode1.addPathToList(currentPath)
-                    newNode2.addPathToList(currentPath)
-
-                    this.pathsList[i].node1 = newNode1
-                    this.pathsList[i].node2 = newNode2
-
-                    break
-                }
+            pathToUpdate.node1 = node1
+            pathToUpdate.node2 = node2
+            if(node1.isPathExist(pathToUpdate) || node2.isPathExist(pathToUpdate)){
+                this.deletePath(pathToUpdate.id)
+                throw new ReferenceError("Path aleready exists!")
             }
+
+            pathToUpdate.node1.deletePathFromList(pathToUpdate)
+            pathToUpdate.node2.deletePathFromList(pathToUpdate)
+
+            let newNode1 = node1;
+            let newNode2 = node2;
+            newNode1.addPathToList(pathToUpdate)
+            newNode2.addPathToList(pathToUpdate)
+
+            pathToUpdate.node1 = newNode1
+            pathToUpdate.node2 = newNode2
+            
             this.update()
         }
         catch(err){
@@ -262,20 +249,15 @@ export class Main{
 
     deletePath(id){
         try{
-            for(let i = 0; i < this.pathsList.length; i++){
-                if(this.pathsList[i].id == id){
-                    let currentPath = this.pathsList[i]
+            let pathToDelete = this.pathsList.get(parseInt(id))
 
-                    currentPath.node1.deletePathFromList(currentPath)
-                    currentPath.node2.deletePathFromList(currentPath)
+            pathToDelete.node1.deletePathFromList(pathToDelete)
+            pathToDelete.node2.deletePathFromList(pathToDelete)
 
-
-                    this.pathsList.splice(i,1)
-                    this.highlightedPath = null;
-                    break
-                }
-            }
-            if(this.pathsList.length==0){
+            this.pathsList.delete(id)
+            this.highlightedPath = null;
+                    
+            if(this.pathsList.size==0){
                 this.highlightedPath = null;
             }
             this.update()
@@ -295,8 +277,8 @@ export class Main{
 
     generatePathList(elementId){
         let pathListHtml = ""
-        for(let i = 0; i<this.pathsList.length; i++){
-            let path = this.pathsList[i]
+        for(let [k,v] of this.pathsList){
+            let path = v
             pathListHtml+= `<p data-id="${path.id}" class="list-item path-list-item" onclick="this.focus()" tabindex="1">${path.id} (${path.node1.id}-${path.node2.id})</p>`
         }
         document.getElementById(elementId).innerHTML = pathListHtml
@@ -305,15 +287,13 @@ export class Main{
     highlightNode(id){
         let nodeToHighlight = this.nodesList.get(parseInt(id))
         nodeToHighlight.isHighlighted = true
+        nodeToHighlight.draw()
     }
 
     highlightPath(id){
-        for(let i = 0; i < this.pathsList.length; i++){
-            if(this.pathsList[i].id == id){
-                this.pathsList[i].isHighlighted = true
-                break
-            }
-        }
+        let path = this.pathsList.get(parseInt(id))
+        path.isHighlighted = true
+        path.draw()
     }
 
     unSetStartNodes(){
@@ -321,7 +301,6 @@ export class Main{
             this.startNode.isStart = false;
             this.startNode.draw()
             this.startNode = null
-
         }
 
     }
@@ -361,8 +340,8 @@ export class Main{
         for(let [k,v] of this.nodesList){
             v.unSetProgress()
         }
-        for(let i = 0; i<this.pathsList.length;i++){
-            this.pathsList[i].unSetProgress()
+        for(let [k,v] of this.pathsList){
+            v.unSetProgress()
         }
         this.update()
 

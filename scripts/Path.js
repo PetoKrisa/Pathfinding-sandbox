@@ -10,12 +10,11 @@ export class Path{
         this.id = id
         this.node1 = node1
         this.node2 = node2
+        this.main.canvas.lineCap = "round";
     }
 
-
     draw(){
-        this.main.canvas.lineCap = "round";
-
+        
         this.main.canvas.lineWidth = 20*this.main.scale
 
         if (this.isProgress){
