@@ -41,6 +41,7 @@ export class SaveLoad{
     }
 
     parseJSON(_json){
+        this.main.reset()
         let json = JSON.parse(_json)
         this.main.nodesId = json.nodesId
         this.main.pathsId = json.pathsId
@@ -80,6 +81,7 @@ export class SaveLoad{
     }
 
     async loadOsm(n,w,e,s){
+        this.main.reset()
         let request = await fetch("https://overpass-api.de/api/interpreter", {
             method:"post",
             body: "data=" + encodeURIComponent(`

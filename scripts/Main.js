@@ -367,5 +367,20 @@ export class Main{
         else{return false}
     }
 
-
+    reset(){
+        this.nodesId = 0;
+        this.pathsId = 0;
+        this.nodesList = new Map();
+        this.pathsList = new Map();
+        this.bgBlob = null;
+        this.bgImageName = null;
+        this.ghostNode = null;
+        this.addedPath = null;
+        this.highlightedNode = null;
+        this.highlightedPath =null;
+        this.draggedNode = null;
+        this.startNode = null;
+        this.endNode = null;
+        this.update()
+    }
 } 
