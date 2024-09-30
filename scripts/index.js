@@ -7,6 +7,9 @@ import { Path } from "./Path.js";
 const main = new Main("canvas")
 const pathfindig = new Dijkstra(main)
 const pathfindig2 = new Astar(main)
+main.update()
+
+
 
 function UpdateEditNodeInputs(){
     if(main.highlightedNode == null){
@@ -241,13 +244,18 @@ canvas.onmouseup = (e)=>{
     }
 }
 
+var offsetCoords = [0,0]
 canvas.onmousedown = (e)=>{
     let mousecoords = getMousePosition(main.canvas,e)
     let closest = main.findClosestNode(mousecoords[0], mousecoords[1])
-    if(e.ctrlKey&&main.getDistanceFromNode(mousecoords[0],mousecoords[1],closest) <= 42*main.scale){
+    if(e.buttons==4){
+        offsetCoords = getMousePosition(main.canvas,e)
+    }
+    else if(e.buttons==1&&e.ctrlKey&&main.getDistanceFromNode(mousecoords[0],mousecoords[1],closest) <= 42*main.scale){
+        console.log("ctrl")
         main.highlightedNode = closest
         main.draggedNode = null
-        main.ghostNode = new Node(main, -1, mousecoords[0], mousecoords[1])
+        main.ghostNode = new Node(main, -1, mousecoords[0]-main.pan[0], mousecoords[1]-main.pan[1])
         let pathToAdd = new Path(main, main.pathsId, main.highlightedNode, main.ghostNode)
         main.addedPath = pathToAdd
         main.pathsList.set(parseInt(pathToAdd.id), pathToAdd)
@@ -280,9 +288,16 @@ canvas.onmousemove = (e)=>{
     }
 
     let mousecoords = getMousePosition(main.canvas,e)
-    if(e.buttons==1 && e.ctrlKey && main.ghostNode !=null && main.addedPath != null){
-        main.ghostNode.x = mousecoords[0]
-        main.ghostNode.y = mousecoords[1]
+    if(e.buttons == 4){
+        console.log(main.pan[0]+(offsetCoords[0]-mousecoords[0]),main.pan[1]+(offsetCoords[1]-mousecoords[1]))
+        main.pan[0] = main.pan[0]-(offsetCoords[0]-mousecoords[0])
+        main.pan[1] = main.pan[1]-(offsetCoords[1]-mousecoords[1])
+        offsetCoords = getMousePosition(main.canvas,e)
+        main.update()
+    }
+    else if(e.buttons==1 && e.ctrlKey && main.ghostNode !=null && main.addedPath != null){
+        main.ghostNode.x = mousecoords[0] - main.pan[0]
+        main.ghostNode.y = mousecoords[1] - main.pan[1]
         main.update()
     }
     else if(e.buttons==1 && main.draggedNode!=null){
@@ -291,7 +306,7 @@ canvas.onmousemove = (e)=>{
             main.updateNode(main.draggedNode,Math.round(mousecoords[0]/100)*100,Math.round(mousecoords[1]/100)*100)
             main.drawGrid()
         }   else{
-            main.updateNode(main.draggedNode,mousecoords[0],mousecoords[1])
+            main.updateNode(main.draggedNode,mousecoords[0]-main.pan[0],mousecoords[1]-main.pan[1])
         }
         
         //main.generateNodeList("nodeList")
@@ -300,6 +315,18 @@ canvas.onmousemove = (e)=>{
         main.highlightNode(main.draggedNode.id)
     }
 }
+
+canvas.addEventListener('wheel', (e)=>{
+    if(e.deltaY<0 && main.zoomLevel<15){
+        main.canvas.scale(1.05, 1.05)
+        main.zoomLevel++
+        main.update()
+    } else if(e.deltaY>0 && main.zoomLevel>0){
+        main.canvas.scale(0.95, 0.95)
+        main.zoomLevel--
+        main.update()
+    }
+})
 
 btnSave.onclick = (e)=>{
     main.saveLoad.generateJSON(inputFileName.value)
@@ -320,7 +347,7 @@ btnDelBg.onclick = (e)=>{
 }
 
 btnStartPath.onclick = (e)=>{
-    
+
     switch(selectAlg.value){
         case "dijkstra":
             if(inputDelay.value == ""){pathfindig.start()}
@@ -331,7 +358,6 @@ btnStartPath.onclick = (e)=>{
             else{pathfindig2.start(inputDelay.value)}
             break;
     }
-
 }
 
 btnResetPath.onclick = (e)=>{
@@ -356,4 +382,13 @@ rangeScale.oninput = (e)=>{
 //import osm map
 OSMimport.onclick = (e)=>{
     main.saveLoad.loadOsm(OSMnorth.value, OSMwest.value, OSMeast.value, OSMsouth.value)
+}
+
+btnCenter.onclick = (e)=>{
+    main.pan = [0,0]
+    for(let i = 0; i < main.zoomLevel; i++){
+        main.canvas.scale(0.95, 0.95)
+    }
+    main.zoomLevel = 0;
+    main.update()
 }

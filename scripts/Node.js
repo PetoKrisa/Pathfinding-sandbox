@@ -2,6 +2,7 @@ export class Node{
     id = 0;
     x = 0;
     y = 0;
+    
     paths = [];
     main;
     isHighlighted = false
@@ -16,9 +17,17 @@ export class Node{
         this.y = y
     }
 
-  
+    renderX(){
+        return this.x+this.main.pan[0]
+    }
+    renderY(){
+        return this.y+this.main.pan[1]
+    }
+
     draw(){
-        if(!this.main.editMode){return}
+        if(this.main.editMode || this.isEnd || this.isStart){}
+        else {return}
+        
         if(this.isHighlighted){
             this.main.canvas.fillStyle = "yellow"
         }
@@ -35,8 +44,10 @@ export class Node{
         else{
             this.main.canvas.fillStyle = "white"
         }
+
+
         this.main.canvas.beginPath()
-        this.main.canvas.arc(this.x, this.y, 32*this.main.scale, 0, 2 * Math.PI)
+        this.main.canvas.arc(this.renderX(), this.renderY(), 32*this.main.scale, 0, 2 * Math.PI)
         this.main.canvas.fill()
         
         this.main.canvas.fillStyle = "black"
@@ -47,8 +58,8 @@ export class Node{
         let fontSize = 45*this.main.scale
         this.main.canvas.font = `${fontSize}px monospace`
         let offset = (fontSize/(3.5/this.main.scale))/this.main.scale
-        let textx = this.x - (offset + (offset * (String(this.id).length-1)))
-        let texty = this.y + (offset)
+        let textx = this.renderX() - (offset + (offset * (String(this.id).length-1)))
+        let texty = this.renderY() + (offset)
         this.main.canvas.fillText(this.id, textx, texty)
         
         this.isHighlighted = false

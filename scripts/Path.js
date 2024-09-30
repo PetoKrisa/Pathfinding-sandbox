@@ -29,8 +29,8 @@ export class Path{
 
         
         this.main.canvas.beginPath()
-        this.main.canvas.moveTo(this.node1.x, this.node1.y)
-        this.main.canvas.lineTo(this.node2.x, this.node2.y)
+        this.main.canvas.moveTo(this.node1.renderX(), this.node1.renderY())
+        this.main.canvas.lineTo(this.node2.renderX(), this.node2.renderY())
         this.main.canvas.stroke()
         this.isHighlighted=false
 

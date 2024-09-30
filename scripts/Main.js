@@ -26,6 +26,8 @@ export class Main{
     highlightedNode;
     highlightedPath;
 
+    pan = [0,0]
+    zoomLevel = 0;
     draggedNode = null;
 
     toggleEditMode(){
@@ -42,8 +44,13 @@ export class Main{
             this.canvas.globalAlpha = 0.45
             this.canvas.drawImage(this.bgBlob, 0, 0, 2000, 2000);
             this.canvas.globalAlpha = 1
-
         }
+
+        this.canvas.fillStyle = "white"
+        this.canvas.beginPath()
+        this.canvas.arc(1000+this.pan[0], 1000+this.pan[1], 4, 0, 2 * Math.PI)
+        this.canvas.fill()
+
         for(let [k,v] of this.pathsList){
             v.draw()
         }
@@ -92,11 +99,10 @@ export class Main{
         this.canvas.moveTo(0, 1000)
         this.canvas.lineTo(2000, 1000)
         this.canvas.stroke()
-
     }
 
     getDistanceFromNode(x,y,node){
-        return Math.sqrt((Math.pow((x-node.x),2)+Math.pow((y-node.y),2)))
+        return Math.sqrt((Math.pow((x-node.renderX()),2)+Math.pow((y-node.renderY()),2)))
     }
 
     findClosestNode(x,y){
