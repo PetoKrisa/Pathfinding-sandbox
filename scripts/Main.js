@@ -28,6 +28,7 @@ export class Main{
 
     pan = [0,0]
     zoomLevel = 0;
+    zoomScale(){if (this.zoomLevel>0){return (1+(this.zoomLevel*0.05))} else{return 1}}
     draggedNode = null;
 
     toggleEditMode(){
@@ -42,13 +43,13 @@ export class Main{
         this.canvas.clearRect(0,0,2000,2000)
         if(this.bgBlob != undefined && this.bgImageName != undefined) {
             this.canvas.globalAlpha = 0.45
-            this.canvas.drawImage(this.bgBlob, 0, 0, 2000, 2000);
+            this.canvas.drawImage(this.bgBlob, (0+this.pan[0])*this.zoomScale(), (0+this.pan[1])*this.zoomScale(), 2000*this.zoomScale(), 2000*this.zoomScale());
             this.canvas.globalAlpha = 1
         }
 
         this.canvas.fillStyle = "white"
         this.canvas.beginPath()
-        this.canvas.arc(1000+this.pan[0], 1000+this.pan[1], 4, 0, 2 * Math.PI)
+        this.canvas.arc((1000+this.pan[0])*this.zoomScale(), (1000+this.pan[1])*this.zoomScale(), 4, 0, 2 * Math.PI)
         this.canvas.fill()
 
         for(let [k,v] of this.pathsList){
@@ -102,7 +103,10 @@ export class Main{
     }
 
     getDistanceFromNode(x,y,node){
-        return Math.sqrt((Math.pow((x-node.renderX()),2)+Math.pow((y-node.renderY()),2)))
+        console.log(node.renderX()*this.zoomScale())
+        let x2 = node.renderX()*this.zoomScale()
+        let y2 = node.renderY()*this.zoomScale()
+        return Math.sqrt((Math.pow((x-x2),2)+Math.pow((y-y2),2)))
     }
 
     findClosestNode(x,y){
@@ -145,8 +149,8 @@ export class Main{
     updateNode(node, x, y){
         try{
             let nodeToUpdate = node
-            nodeToUpdate.x = x
-            nodeToUpdate.y = y
+            nodeToUpdate.x = Math.round(x)
+            nodeToUpdate.y = Math.round(y)
             this.update()
         }
         catch(err){
@@ -299,7 +303,12 @@ export class Main{
     highlightPath(id){
         let path = this.pathsList.get(parseInt(id))
         path.isHighlighted = true
+        
         path.draw()
+        path.node1.isHighlighted = true
+        path.node1.draw()
+        path.node2.isHighlighted = true
+        path.node2.draw()
     }
 
     unSetStartNodes(){

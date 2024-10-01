@@ -15,7 +15,7 @@ export class Path{
 
     draw(){
         
-        this.main.canvas.lineWidth = 20*this.main.scale
+        this.main.canvas.lineWidth = 20*this.main.scale*this.main.zoomScale()
 
         if (this.isProgress){
             this.main.canvas.strokeStyle = "red"
@@ -29,8 +29,8 @@ export class Path{
 
         
         this.main.canvas.beginPath()
-        this.main.canvas.moveTo(this.node1.renderX(), this.node1.renderY())
-        this.main.canvas.lineTo(this.node2.renderX(), this.node2.renderY())
+        this.main.canvas.moveTo(this.node1.renderX()*this.main.zoomScale(), this.node1.renderY()*this.main.zoomScale())
+        this.main.canvas.lineTo(this.node2.renderX()*this.main.zoomScale(), this.node2.renderY()*this.main.zoomScale())
         this.main.canvas.stroke()
         this.isHighlighted=false
 

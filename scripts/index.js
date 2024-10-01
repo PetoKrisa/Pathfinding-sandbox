@@ -60,7 +60,6 @@ function UpdateEditPathInputs(){
         labelEditPathId.value = main.highlightedPath.id;
         inputPathNode12.value = main.highlightedPath.node1.id;
         inputPathNode22.value = main.highlightedPath.node2.id;
-        console.log(main.highlightedPath)
     }
 }
 //controls and event listeners to make the buttons do something
@@ -73,7 +72,6 @@ document.addEventListener("focusin", function(e){
     const target = e.target.closest(".node-list-item");
     if(target){
         main.highlightNode(target.dataset.id)
-        main.update()
 
         main.highlightedNode = main.getNode(target.dataset.id)
 
@@ -100,7 +98,6 @@ document.addEventListener("focusin", function(e){
     const target = e.target.closest(".path-list-item");
     if(target){
         main.highlightPath(target.dataset.id)
-        main.update()
 
         main.highlightedPath = main.getPath(target.dataset.id)
         
@@ -248,24 +245,24 @@ var offsetCoords = [0,0]
 canvas.onmousedown = (e)=>{
     let mousecoords = getMousePosition(main.canvas,e)
     let closest = main.findClosestNode(mousecoords[0], mousecoords[1])
+
     if(e.buttons==4){
         offsetCoords = getMousePosition(main.canvas,e)
     }
     else if(e.buttons==1&&e.ctrlKey&&main.getDistanceFromNode(mousecoords[0],mousecoords[1],closest) <= 42*main.scale){
-        console.log("ctrl")
         main.highlightedNode = closest
         main.draggedNode = null
-        main.ghostNode = new Node(main, -1, mousecoords[0]-main.pan[0], mousecoords[1]-main.pan[1])
+        main.ghostNode = new Node(main, -1, (mousecoords[0]-main.pan[0])/main.zoomScale(), (mousecoords[1]-main.pan[1])/main.zoomScale())
         let pathToAdd = new Path(main, main.pathsId, main.highlightedNode, main.ghostNode)
         main.addedPath = pathToAdd
         main.pathsList.set(parseInt(pathToAdd.id), pathToAdd)
         //main.pathsId++
     } else if(e.altKey){
-        main.addNode(mousecoords[0], mousecoords[1])
+        main.addNode((mousecoords[0]-main.pan[0])/main.zoomScale(), (mousecoords[1]-main.pan[1])/main.zoomScale())
         main.update()
         main.generateNodeList("nodeList")
     }
-    else if(main.getDistanceFromNode(mousecoords[0],mousecoords[1],closest) <= 42*main.scale){
+    else if(main.getDistanceFromNode(mousecoords[0],mousecoords[1],closest) <= 42*main.scale*main.zoomScale()){
         main.draggedNode = closest
         main.highlightedNode = closest
         
@@ -289,15 +286,14 @@ canvas.onmousemove = (e)=>{
 
     let mousecoords = getMousePosition(main.canvas,e)
     if(e.buttons == 4){
-        console.log(main.pan[0]+(offsetCoords[0]-mousecoords[0]),main.pan[1]+(offsetCoords[1]-mousecoords[1]))
         main.pan[0] = main.pan[0]-(offsetCoords[0]-mousecoords[0])
         main.pan[1] = main.pan[1]-(offsetCoords[1]-mousecoords[1])
         offsetCoords = getMousePosition(main.canvas,e)
         main.update()
     }
     else if(e.buttons==1 && e.ctrlKey && main.ghostNode !=null && main.addedPath != null){
-        main.ghostNode.x = mousecoords[0] - main.pan[0]
-        main.ghostNode.y = mousecoords[1] - main.pan[1]
+        main.ghostNode.x = (mousecoords[0] - main.pan[0])/main.zoomScale()
+        main.ghostNode.y = (mousecoords[1] - main.pan[1])/main.zoomScale()
         main.update()
     }
     else if(e.buttons==1 && main.draggedNode!=null){
@@ -306,7 +302,7 @@ canvas.onmousemove = (e)=>{
             main.updateNode(main.draggedNode,Math.round(mousecoords[0]/100)*100,Math.round(mousecoords[1]/100)*100)
             main.drawGrid()
         }   else{
-            main.updateNode(main.draggedNode,mousecoords[0]-main.pan[0],mousecoords[1]-main.pan[1])
+            main.updateNode(main.draggedNode,(mousecoords[0]/main.zoomScale()-main.pan[0]),(mousecoords[1]/main.zoomScale()-main.pan[1]))
         }
         
         //main.generateNodeList("nodeList")
@@ -316,13 +312,19 @@ canvas.onmousemove = (e)=>{
     }
 }
 
+var lastZoom = 0;
 canvas.addEventListener('wheel', (e)=>{
+    if(Date.now() - lastZoom > 41) {
+        lastZoom = Date.now()
+    } else{
+        return
+    }
     if(e.deltaY<0 && main.zoomLevel<15){
-        main.canvas.scale(1.05, 1.05)
+        //main.canvas.scale(1.05, 1.05)
         main.zoomLevel++
         main.update()
     } else if(e.deltaY>0 && main.zoomLevel>0){
-        main.canvas.scale(0.95, 0.95)
+        //main.canvas.scale(0.95236, 0.95236)
         main.zoomLevel--
         main.update()
     }
@@ -386,9 +388,9 @@ OSMimport.onclick = (e)=>{
 
 btnCenter.onclick = (e)=>{
     main.pan = [0,0]
-    for(let i = 0; i < main.zoomLevel; i++){
-        main.canvas.scale(0.95, 0.95)
-    }
+    //for(let i = 0; i < main.zoomLevel; i++){
+    //    //main.canvas.scale(0.95236, 0.95236)
+    //}
     main.zoomLevel = 0;
     main.update()
 }

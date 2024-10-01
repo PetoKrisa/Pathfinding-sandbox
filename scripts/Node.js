@@ -28,6 +28,11 @@ export class Node{
         if(this.main.editMode || this.isEnd || this.isStart){}
         else {return}
         
+        if(this.renderX()*this.main.zoomScale()<0 || this.renderX()*this.main.zoomScale()>2000 ||
+        this.renderY()*this.main.zoomScale()<0 || this.renderY()*this.main.zoomScale()>2000){
+            return
+        }
+
         if(this.isHighlighted){
             this.main.canvas.fillStyle = "yellow"
         }
@@ -40,14 +45,13 @@ export class Node{
         else if (this.isEnd){
             this.main.canvas.fillStyle = "red"
         } 
-        
         else{
             this.main.canvas.fillStyle = "white"
         }
-
-
+        
+        
         this.main.canvas.beginPath()
-        this.main.canvas.arc(this.renderX(), this.renderY(), 32*this.main.scale, 0, 2 * Math.PI)
+        this.main.canvas.arc(this.renderX()*this.main.zoomScale(), this.renderY()*this.main.zoomScale(), 32*this.main.scale*this.main.zoomScale(), 0, 2 * Math.PI)
         this.main.canvas.fill()
         
         this.main.canvas.fillStyle = "black"
@@ -56,11 +60,11 @@ export class Node{
         }
 
         let fontSize = 45*this.main.scale
-        this.main.canvas.font = `${fontSize}px monospace`
+        this.main.canvas.font = `${fontSize*this.main.zoomScale()}px monospace`
         let offset = (fontSize/(3.5/this.main.scale))/this.main.scale
         let textx = this.renderX() - (offset + (offset * (String(this.id).length-1)))
         let texty = this.renderY() + (offset)
-        this.main.canvas.fillText(this.id, textx, texty)
+        this.main.canvas.fillText(this.id, textx*this.main.zoomScale(), texty*this.main.zoomScale())
         
         this.isHighlighted = false
     }
