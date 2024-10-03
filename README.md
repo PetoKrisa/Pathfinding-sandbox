@@ -33,7 +33,10 @@ Since this app uses js-modules, and fetch requests, you need a generic http or p
 - Pressing `Control+e` will toggle edit mode, which means that it will hide the nodes, so it is easier to see short paths
 - Holding `Contol` while clicking and dragging a node will allow you to connect nodes together with you mouse
 - Holding `Alt` while clicking on the canvas will place a node at your cursor
+- Holding the `scrollwheel` and moving the mouse will pan the view
+- scrolling will zoom in and out
 - There is a range slider below the canvas, which sets the scale of nodes and paths, which allows you to see better
+	- under the slider there is a reset pan button, which will undo panning and zooming, and recenter the view
 - And finally there is a button labelled `Import OSM map` which opens an import dialoge
 #### 3.1.2 How to import an OSM map
 1. Click the `Import OSM map` button
