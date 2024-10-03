@@ -1,4 +1,4 @@
-import { Node } from "./node.js"
+import { Node } from "./Node.js"
 import { SaveLoad } from "./SaveLoad.js";
 import { Path } from "./Path.js";
 export class Main{

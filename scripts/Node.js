@@ -9,6 +9,7 @@ export class Node{
     isStart = false
     isEnd = false
     isProgress = false
+    attribute = [] //"", "higlighted", "progress", "start", "end"
 
     constructor(main,id,x,y){
         this.main = main
@@ -25,7 +26,9 @@ export class Node{
     }
 
     draw(){
-        if(this.main.editMode || this.isEnd || this.isStart){}
+        let emphasis = 1
+        if(this.main.editMode){}
+        else if(!this.main.editMode && (this.isEnd || this.isStart)){emphasis = 2}
         else {return}
         
         if(this.renderX()*this.main.zoomScale()<0 || this.renderX()*this.main.zoomScale()>2000 ||
@@ -51,7 +54,7 @@ export class Node{
         
         
         this.main.canvas.beginPath()
-        this.main.canvas.arc(this.renderX()*this.main.zoomScale(), this.renderY()*this.main.zoomScale(), 32*this.main.scale*this.main.zoomScale(), 0, 2 * Math.PI)
+        this.main.canvas.arc(this.renderX()*this.main.zoomScale(), this.renderY()*this.main.zoomScale(), 32*this.main.scale*this.main.zoomScale()*emphasis, 0, 2 * Math.PI)
         this.main.canvas.fill()
         
         this.main.canvas.fillStyle = "black"
