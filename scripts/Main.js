@@ -103,7 +103,6 @@ export class Main{
     }
 
     getDistanceFromNode(x,y,node){
-        console.log(node.renderX()*this.zoomScale())
         let x2 = node.renderX()*this.zoomScale()
         let y2 = node.renderY()*this.zoomScale()
         return Math.sqrt((Math.pow((x-x2),2)+Math.pow((y-y2),2)))
@@ -151,7 +150,8 @@ export class Main{
             let nodeToUpdate = node
             nodeToUpdate.x = Math.round(x)
             nodeToUpdate.y = Math.round(y)
-            this.update()
+            nodeToUpdate.draw()
+            //this.update()
         }
         catch(err){
             alert(err)
@@ -296,7 +296,7 @@ export class Main{
 
     highlightNode(id){
         let nodeToHighlight = this.nodesList.get(parseInt(id))
-        nodeToHighlight.isHighlighted = true
+        nodeToHighlight.addAttribute("highlighted")
         nodeToHighlight.draw()
     }
 
@@ -305,15 +305,15 @@ export class Main{
         path.isHighlighted = true
         
         path.draw()
-        path.node1.isHighlighted = true
+        path.node1.addAttribute("highlighted")
         path.node1.draw()
-        path.node2.isHighlighted = true
+        path.node2.addAttribute("highlighted")
         path.node2.draw()
     }
 
     unSetStartNodes(){
         if(this.startNode != null){
-            this.startNode.isStart = false;
+            this.startNode.delAttribute("start")
             this.startNode.draw()
             this.startNode = null
         }
@@ -323,17 +323,17 @@ export class Main{
     setStartNodeToHighlight(){
         let node = this.highlightedNode
         this.unSetStartNodes()
-        if(node.isEnd){
-            node.unSetEnd()
-        }
+
+        node.delAttribute("end")
+        
         this.startNode = node
-        node.setStart()
+        node.addAttribute("start")
         node.draw()
     }
 
     unSetEndNodes(){
         if(this.endNode != null){
-            this.endNode.isEnd = false
+            this.endNode.delAttribute("end")
             this.endNode.draw()
             this.endNode = null;
         }
@@ -343,17 +343,16 @@ export class Main{
     setEndNodeToHighlighted(){
         let node = this.highlightedNode
         this.unSetEndNodes()
-        if(node.isStart){
-            node.unSetStart()
-        }
+        node.delAttribute("start")
+
         this.endNode = node;
-        node.setEnd()
+        node.addAttribute("end")
         node.draw()
     }
 
     unSetAllProgress(){
         for(let [k,v] of this.nodesList){
-            v.unSetProgress()
+            v.delAttribute("progress")
         }
         for(let [k,v] of this.pathsList){
             v.unSetProgress()

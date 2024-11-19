@@ -1,4 +1,4 @@
-import { Node } from "./node.js"
+import { Node } from "./Node.js"
 import { Main } from "./Main.js"
 
 export class Dijkstra{
@@ -67,7 +67,7 @@ export class Dijkstra{
             let currentNode = this.getShrotestDistanceNode()
             this.setToVisited(currentNode.node.id)
             if(delay!=0){
-                currentNode.node.setProgress()
+                currentNode.node.addAttribute("progress")
                 currentNode.node.draw()
                 await this.timeout(delay)
             }
@@ -96,7 +96,7 @@ export class Dijkstra{
                         this
                     }
     
-                    if(nextNode.node.isEnd){
+                    if(nextNode.node.hasAttribute("end")){
                         visitedEnd = true
                         this.setToVisited(nextNode.node.id)
                     }
@@ -116,14 +116,14 @@ export class Dijkstra{
 
     DrawBestPath(){
         this.main.unSetAllProgress()
-        let endNode = this.visitedNodes.find((e)=>e.node.isEnd===true)
+        let endNode = this.visitedNodes.find((e)=>e.node.hasAttribute("end")===true)
         let currentNode = endNode;
         let returnedToStart = false
         while (!returnedToStart){
-            currentNode.node.setProgress()
+            currentNode.node.addAttribute("progress")
             let nextNode = this.visitedNodes.find((e)=>e.node.id===currentNode.prevId)
             
-            if(currentNode.node.isStart){
+            if(currentNode.node.hasAttribute("start")){
                 returnedToStart = true
             } else{
                 for(let i = 0; i < currentNode.node.paths.length; i++){

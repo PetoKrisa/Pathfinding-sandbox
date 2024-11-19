@@ -1,7 +1,7 @@
 import { Dijkstra } from "./Dijkstra.js";
 import { Main } from "./Main.js"
 import { Astar } from "./Astar.js";
-import { Node } from "./node.js";
+import { Node } from "./Node.js";
 import { Path } from "./Path.js";
 
 const main = new Main("canvas")
@@ -38,8 +38,8 @@ function UpdateEditNodeInputs(){
         btnEnd.disabled = false
         btnStart.checked = false
         btnEnd.checked = false
-        if(main.highlightedNode.isStart){btnStart.checked = true}
-        if(main.highlightedNode.isEnd){btnEnd.checked = true}
+        if(main.highlightedNode.hasAttribute("start")){btnStart.checked = true}
+        if(main.highlightedNode.hasAttribute("end")){btnEnd.checked = true}
     }
 }
 
@@ -232,6 +232,7 @@ canvas.onmouseup = (e)=>{
         }
     }
     else if(main.draggedNode != null){
+        main.draggedNode.delAttribute("highlighted")
         main.update()
         main.draggedNode = null
         main.generateNodeList("nodeList")
@@ -267,7 +268,6 @@ canvas.onmousedown = (e)=>{
         main.highlightedNode = closest
         
         UpdateEditNodeInputs()
-        //main.updateNode(main.draggedNode,mousecoords[0],mousecoords[1])
         main.generateNodeList("nodeList")
         main.generatePathList("pathList")
         main.highlightNode(main.draggedNode.id)
@@ -308,7 +308,7 @@ canvas.onmousemove = (e)=>{
         //main.generateNodeList("nodeList")
         //inputNodeX2.value = main.highlightedNode.x;
         //inputNodeY2.value = main.highlightedNode.y;
-        main.highlightNode(main.draggedNode.id)
+        //main.highlightNode(main.draggedNode.id)
     }
 }
 

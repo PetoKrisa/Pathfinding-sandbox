@@ -1,90 +1,98 @@
 {
-	"nodesId": 6,
+	"nodesId": 7,
 	"pathsId": 9,
 	"nodes": [
 		{
 			"id": 0,
-			"x": 499,
-			"y": 970,
+			"x": 800,
+			"y": 800,
 			"paths": [
 				0,
-				1
+				1,
+				6
 			],
-			"isStart": true,
-			"isEnd": false
+			"attribute": [
+				""
+			]
 		},
 		{
 			"id": 1,
-			"x": 800,
-			"y": 700,
+			"x": 1200,
+			"y": 800,
 			"paths": [
-				0,
 				2,
-				3
+				3,
+				6,
+				8
 			],
-			"isStart": false,
-			"isEnd": false
+			"attribute": [
+				""
+			]
 		},
 		{
 			"id": 2,
 			"x": 800,
-			"y": 1137,
+			"y": 1200,
 			"paths": [
 				1,
 				2,
-				4,
-				5
+				5,
+				7
 			],
-			"isStart": false,
-			"isEnd": false
+			"attribute": [
+				""
+			]
 		},
 		{
 			"id": 3,
-			"x": 1204,
-			"y": 731,
-			"paths": [
-				3,
-				4,
-				6,
-				8
-			],
-			"isStart": false,
-			"isEnd": false
-		},
-		{
-			"id": 4,
 			"x": 1200,
 			"y": 1200,
 			"paths": [
-				5,
-				6,
+				3,
+				4,
 				7
 			],
-			"isStart": false,
-			"isEnd": false
+			"attribute": [
+				""
+			]
+		},
+		{
+			"id": 4,
+			"x": 500,
+			"y": 1000,
+			"paths": [
+				0,
+				5
+			],
+			"attribute": [
+				"start",
+				""
+			]
 		},
 		{
 			"id": 5,
-			"x": 1509,
-			"y": 913,
+			"x": 1500,
+			"y": 1000,
 			"paths": [
-				7,
+				4,
 				8
 			],
-			"isStart": false,
-			"isEnd": true
+			"attribute": [
+				"end",
+				""
+			]
 		}
 	],
 	"paths": [
 		{
 			"id": 0,
 			"node1": 0,
-			"node2": 1
+			"node2": 4
 		},
 		{
 			"id": 1,
-			"node1": 0,
-			"node2": 2
+			"node1": 2,
+			"node2": 0
 		},
 		{
 			"id": 2,
@@ -93,12 +101,12 @@
 		},
 		{
 			"id": 3,
-			"node1": 1,
-			"node2": 3
+			"node1": 3,
+			"node2": 1
 		},
 		{
 			"id": 4,
-			"node1": 2,
+			"node1": 5,
 			"node2": 3
 		},
 		{
@@ -108,18 +116,18 @@
 		},
 		{
 			"id": 6,
-			"node1": 3,
-			"node2": 4
+			"node1": 1,
+			"node2": 0
 		},
 		{
 			"id": 7,
-			"node1": 5,
-			"node2": 4
+			"node1": 3,
+			"node2": 2
 		},
 		{
 			"id": 8,
 			"node1": 5,
-			"node2": 3
+			"node2": 1
 		}
 	]
 }

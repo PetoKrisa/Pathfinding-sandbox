@@ -1,5 +1,5 @@
 import { Path } from "./Path.js"
-import { Node } from "./node.js"
+import { Node } from "./Node.js"
 export class SaveLoad{
     main;
     canvas;
@@ -47,11 +47,16 @@ export class SaveLoad{
         this.main.pathsId = json.pathsId
         if(json.bgImageName != undefined){this.addBackground(json.bgImageName)}
 
+
         for(let i = 0; i < json.nodes.length; i++){
             let node = json.nodes[i]
+            console.log(node)
+
             let nodeToPush = new Node(this.main,parseInt(node.id), node.x, node.y)
-            if(node.isStart){nodeToPush.isStart = true}
-            if(node.isEnd){nodeToPush.isEnd = true
+            if(node.attribute.includes("start")){nodeToPush.addAttribute("start")
+                this.main.startNode = nodeToPush
+            }
+            if(node.attribute.includes("end")){nodeToPush.addAttribute("end")
                 this.main.endNode = nodeToPush
             }
             this.main.nodesList.set(parseInt(nodeToPush.id),nodeToPush)

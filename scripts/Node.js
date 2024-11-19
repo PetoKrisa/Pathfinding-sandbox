@@ -5,11 +5,8 @@ export class Node{
     
     paths = [];
     main;
-    isHighlighted = false
-    isStart = false
-    isEnd = false
-    isProgress = false
-    attribute = [] //"", "higlighted", "progress", "start", "end"
+    attribute = [""] //"higlighted", "progress", "start", "end",""
+    //attribute priority is the same as the index in the array
 
     constructor(main,id,x,y){
         this.main = main
@@ -36,31 +33,32 @@ export class Node{
             return
         }
 
-        if(this.isHighlighted){
-            this.main.canvas.fillStyle = "yellow"
+        let textColor = "black" 
+        switch (this.attribute[0]){
+            case "progress":
+                this.main.canvas.fillStyle = "red"
+                break
+            case "highlighted":
+                this.main.canvas.fillStyle = "yellow"
+                break
+            case "start":
+                this.main.canvas.fillStyle = "green"
+                textColor = "white"
+                break
+            case "end":
+                this.main.canvas.fillStyle = "red"
+                textColor = "white"
+                break
+            default:
+                this.main.canvas.fillStyle = "white"
+                break
         }
-        else if (this.isProgress){
-            this.main.canvas.fillStyle = "red"
-        } 
-        else if (this.isStart){
-            this.main.canvas.fillStyle = "green"
-        } 
-        else if (this.isEnd){
-            this.main.canvas.fillStyle = "red"
-        } 
-        else{
-            this.main.canvas.fillStyle = "white"
-        }
-        
         
         this.main.canvas.beginPath()
         this.main.canvas.arc(this.renderX()*this.main.zoomScale(), this.renderY()*this.main.zoomScale(), 32*this.main.scale*this.main.zoomScale()*emphasis, 0, 2 * Math.PI)
         this.main.canvas.fill()
         
-        this.main.canvas.fillStyle = "black"
-        if(this.isEnd || this.isStart){
-            this.main.canvas.fillStyle = "white"
-        }
+        this.main.canvas.fillStyle = textColor
 
         let fontSize = 45*this.main.scale
         this.main.canvas.font = `${fontSize*this.main.zoomScale()}px monospace`
@@ -69,7 +67,22 @@ export class Node{
         let texty = this.renderY() + (offset)
         this.main.canvas.fillText(this.id, textx*this.main.zoomScale(), texty*this.main.zoomScale())
         
-        this.isHighlighted = false
+    }
+
+    addAttribute(_attribute){
+        if(!this.attribute.includes(_attribute)){
+            this.attribute.splice(0,0,_attribute)
+        }
+    }
+
+    delAttribute(_attribute){
+        if(this.attribute.includes(_attribute)){
+            this.attribute.splice(this.attribute.indexOf(_attribute),1)
+        }
+    }
+
+    hasAttribute(_attribute){
+        return this.attribute.includes(_attribute)
     }
 
     addPathToList(path){
@@ -109,35 +122,13 @@ export class Node{
         return false
     }
 
-    setProgress(){
-        this.isProgress=true;
-    }
-    unSetProgress(){
-        this.isProgress=false
-    }
-
-    setStart(){
-        this.isStart=true;
-    }
-    unSetStart(){
-        this.isStart=false;
-    }
-
-    setEnd(){
-        this.isEnd=true;
-    }
-    unSetEnd(){
-        this.isEnd=false;
-    }
-
-
     toJSON(){
         let pathsIdList = []
         for(let i = 0; i<this.paths.length;i++){
             pathsIdList.push(this.paths[i].id)
         }
         return {id: this.id, x: this.x, y:this.y,
-            paths: pathsIdList, isStart: this.isStart, isEnd: this.isEnd
+            paths: pathsIdList, attribute: this.attribute
         }
     }
 }
