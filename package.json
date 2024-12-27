@@ -1,0 +1,23 @@
+{
+  "name": "pathfinding-sandbox",
+  "version": "1.0.0",
+  "description": "In this app you can add, and edit nodes *(verticies)* and paths *(edges)* of a weighted graph. The weights are the actual length of the paths in pixels. You can save and load graphs, add a starting *(fixed vertex)* and an ending point. With a specified starting and ending point you can start the [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm) or the [A* algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm) visualiser.\r You can even import real world maps from [OpenStreetMap](https://www.openstreetmap.org)\r I made it using only vanilla JS and HTML canvas.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PetoKrisa/Pathfinding-sandbox.git"
+  },
+  "author": "PetoKrisa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PetoKrisa/Pathfinding-sandbox/issues"
+  },
+  "homepage": "https://github.com/PetoKrisa/Pathfinding-sandbox#readme",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

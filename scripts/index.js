@@ -301,8 +301,10 @@ canvas.onmousemove = (e)=>{
         if(e.shiftKey){
             main.updateNode(main.draggedNode,Math.round(mousecoords[0]/100)*100,Math.round(mousecoords[1]/100)*100)
             main.drawGrid()
+            main.update()
         }   else{
             main.updateNode(main.draggedNode,(mousecoords[0]/main.zoomScale()-main.pan[0]),(mousecoords[1]/main.zoomScale()-main.pan[1]))
+            main.update()
         }
         
         //main.generateNodeList("nodeList")

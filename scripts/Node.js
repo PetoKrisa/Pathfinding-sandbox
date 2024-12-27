@@ -16,7 +16,7 @@ export class Node{
     }
 
     renderX(){
-        return this.x+this.main.pan[0]
+        return this.x+this.main.pan[0]  
     }
     renderY(){
         return this.y+this.main.pan[1]
