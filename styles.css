@@ -31,6 +31,28 @@
     max-height: 30px;
 }
 
+.glow{
+    animation: glow 2s;
+}
+
+@keyframes glow {
+    0%{
+        box-shadow: 0px 0px 0px white;
+    }
+    25%{
+        box-shadow: 0px 0px 30px gold;
+    }
+    50%{
+        box-shadow: 0px 0px 0px white;
+    }
+    75%{
+        box-shadow: 0px 0px 30px gold;
+    }
+    100%{
+        box-shadow: 0px 0px 0px white;
+    }
+}
+
 body{
     background-color: var(--background);
     color: var(--accent);
