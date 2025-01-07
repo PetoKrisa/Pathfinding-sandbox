@@ -2,8 +2,7 @@ const express = require("express")
 const app = express()
 const PORT = 8080
 
-app.use("/saves", express.static("./saves"))
-app.use("/scripts", express.static("./scripts"))
+app.use("/", express.static("./"))
 
 app.get("/", (req,res)=>{
     res.sendFile(`${__dirname}/canvas.html`)
