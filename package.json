@@ -19,5 +19,10 @@
   "homepage": "https://github.com/PetoKrisa/Pathfinding-sandbox#readme",
   "dependencies": {
     "express": "^4.21.2"
-  }
+  },
+  "engines": {
+  "node": "20.x"
+}
+
+  
 }
