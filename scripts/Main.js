@@ -161,8 +161,14 @@ export class Main{
     deleteNode(id){
         try{
             let nodeToDelete = this.nodesList.get(parseInt(id))
+            console.log(nodeToDelete.paths)
+            let pathsToDelete = []
             for(let e of nodeToDelete.paths){
-                this.deletePath(e.id)
+                pathsToDelete.push(e.id)
+            }
+
+            for(let e of pathsToDelete){
+                this.deletePath(e)
             }
             this.nodesList.delete(parseInt(id))
 
