@@ -20,6 +20,11 @@ Since this app uses js-modules, and fetch requests, you need a generic http or p
 - In httpd.conf find `DocumentRoot "C:/xampp/htdocs"` and `<Directory "C:/xampp/htdocs">`
 - Replace the path with the app path, and restart Apache if it is running
 - Go to `http://localhost/canvas.html`
+#### 2.3 Node.js method
+- Install the Node.js runtime
+- CD into the directory
+- run `node server.js`
+- open `http://localhost:8080/`
 
 ## 3. User Interface
 ### 3.1 Canvas
